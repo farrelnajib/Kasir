@@ -65,7 +65,9 @@
                         <td><?php echo $menu->menu_name; ?></td>
                         <td>Rp. <?php echo number_format($menu->menu_price, 0); ?></td>
                         <td><img src="<?php echo base_url('assets/img/') . $menu->menu_picture; ?>" style="max-width: 100px;"></td>
-                        <td><?php echo $menu->status == 1 ? 'Available' : 'Out of stock'; ?></td>
+                        <td>
+                          <div class="badge badge-pill <?php echo $menu->status == 1 ? 'badge-success' : 'badge-danger'; ?>"><?php echo $menu->status == 1 ? 'Available' : 'Out of stock'; ?></div>
+                        </td>
                         <td align="center">
                           <a href="<?php echo base_url('admin/menu/details/') . $menu->menu_id ?>">
                             <i class="far fa-edit"></i>
