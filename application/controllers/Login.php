@@ -29,21 +29,16 @@ class Login extends CI_Controller
         $user = $this->User_model->getEmail($email);
 
         if ($user) {
-            if ($user->role_id == 1) {
-                if (password_verify($password, $user->user_password)) {
-                    $data['id'] = $user->user_id;
-                    $data['name'] = $user->user_name;
-                    $data['email'] = $user->user_email;
-                    $data['role'] = $user->role_id;
-                    $data['isLoggedIn'] = true;
-                    $this->session->set_userdata($data);
-                    redirect(base_url('order'));
-                } else {
-                    $this->session->set_flashdata('danger', 'Wrong password');
-                    $this->load->view('admin/login');
-                }
+            if (password_verify($password, $user->user_password)) {
+                $data['id'] = $user->user_id;
+                $data['name'] = $user->user_name;
+                $data['email'] = $user->user_email;
+                $data['role'] = $user->role_id;
+                $data['isLoggedIn'] = true;
+                $this->session->set_userdata($data);
+                redirect(base_url('order'));
             } else {
-                $this->session->set_flashdata('danger', 'Your role is not strong enough');
+                $this->session->set_flashdata('danger', 'Wrong password');
                 $this->load->view('admin/login');
             }
         } else {

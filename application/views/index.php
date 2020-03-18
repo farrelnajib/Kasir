@@ -28,6 +28,7 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
+          <?php $this->load->view('_partials/alerts'); ?>
 
           <?php $this->load->view('_partials/breadcrumbs'); ?>
 
