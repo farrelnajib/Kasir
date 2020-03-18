@@ -49,15 +49,28 @@ class Menu extends CI_Controller
         }
     }
 
+    private function image_compress($upload_data)
+    {
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = './assets/img/' . $upload_data["file_name"];
+        $config['create_thumb'] = false;
+        $config['maintain_ratio'] = true;
+        $config['quality'] = '60%';
+        $config['width'] = 500;
+        $config['new_image'] = './assets/img/' . $upload_data["file_name"];
+
+        $this->load->library('image_lib', $config);
+    }
+
 
     public function add()
     {
         $data['categories'] = $this->Category_model->getAll();
         $config['upload_path'] = './assets/img/';
         $config['allowed_types'] = 'gif|png|jpg|jpeg';
-        $config['file_name'] = $this->input->post('name');
+        $config['encrypt_name'] = true;
 
-        $this->load->library('upload', $config);
+        $this->load->library('upload');
         $this->upload->initialize($config);
 
         $this->form_validation->set_rules('name', 'name', 'trim|required|is_unique[menu.menu_name]');
@@ -77,28 +90,36 @@ class Menu extends CI_Controller
                 $this->session->set_flashdata('danger', 'Please upload a file');
                 $this->load->view('admin/menu/_form', $data);
             } else {
-
                 if (!$this->upload->do_upload('menu_image')) {
                     $data['error'] = $this->upload->display_errors();
                     $this->session->set_flashdata('danger', $data['error']);
                     $this->load->view('admin/menu/_form', $data);
                 } else {
                     $upload_data = $this->upload->data();
-                    $img = $upload_data['file_name'];
-                    $data = [
-                        'menu_name' => $this->input->post('name'),
-                        'menu_price' => $this->input->post('price'),
-                        'category_id' => $this->input->post('category'),
-                        'menu_picture' => $img,
-                        'status' => $this->input->post('status')
-                    ];
 
-                    if ($this->Menu_model->insert($data)) {
-                        $this->session->set_flashdata('success', 'Successfully saved menu');
-                        redirect(base_url('admin/menu'));
-                    } else {
-                        $this->session->set_flashdata('danger', 'Failed to save menu');
+                    $this->image_compress($upload_data);
+
+                    if (!$this->image_lib->resize()) {
+                        $data['error'] = $this->image_lib->display_errors();
+                        $this->session->set_flashdata('danger', $data['error']);
                         $this->load->view('admin/menu/_form', $data);
+                    } else {
+                        $img = $upload_data['file_name'];
+                        $data = [
+                            'menu_name' => $this->input->post('name'),
+                            'menu_price' => $this->input->post('price'),
+                            'category_id' => $this->input->post('category'),
+                            'menu_picture' => $img,
+                            'status' => $this->input->post('status')
+                        ];
+
+                        if ($this->Menu_model->insert($data)) {
+                            $this->session->set_flashdata('success', 'Successfully saved menu');
+                            redirect(base_url('admin/menu'));
+                        } else {
+                            $this->session->set_flashdata('danger', 'Failed to save menu');
+                            $this->load->view('admin/menu/_form', $data);
+                        }
                     }
                 }
             }
@@ -140,7 +161,7 @@ class Menu extends CI_Controller
 
         $config['upload_path'] = './assets/img/';
         $config['allowed_types'] = 'gif|png|jpg|jpeg';
-        $config['file_name'] = $this->input->post('name');
+        $config['encrypt_name'] = true;
 
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
@@ -165,8 +186,17 @@ class Menu extends CI_Controller
             if (!empty($_FILES['menu_image']['name'])) {
                 unlink('./assets/img/' . $data['menu'][0]->menu_picture);
                 $upload_data = $this->upload->data();
-                $img = $upload_data['file_name'];
-                $dataUpdate['menu_picture'] = $img;
+
+                $this->image_compress($upload_data);
+
+                if (!$this->image_lib->resize()) {
+                    $data['error'] = $this->image_lib->display_errors();
+                    $this->session->set_flashdata('danger', $data['error']);
+                    $this->load->view('admin/menu/_form', $data);
+                } else {
+                    $img = $upload_data['file_name'];
+                    $dataUpdate['menu_picture'] = $img;
+                }
             }
             $this->Menu_model->update($id, $dataUpdate);
             $this->session->set_flashdata('success', 'Success edit menu data');

@@ -13,9 +13,11 @@
 <script src="<?php echo base_url(); ?>assets/vendor/datatables/dataTables.bootstrap4.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="<?php echo base_url(); ?>assets/js/demo/chart-area-demo.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/demo/chart-pie-demo.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/demo/datatables-demo.js"></script>
 
 <!-- Numeral js -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+<!-- Select2 js -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/custom.js"></script>

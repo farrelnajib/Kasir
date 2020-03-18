@@ -32,22 +32,33 @@
 
           <?php $this->load->view('_partials/breadcrumbs'); ?>
 
+          <!-- Search bar -->
+          <form class="form-inline">
+            <div class="input-group shadow" style="float: right;">
+              <input type="text" class="form-control border-0 small" placeholder="Search for...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
           <!-- Page Heading -->
 
           <?php foreach ($category as $category) :
             $id = $category->category_id; ?>
-            <div class="row">
-              <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
-            </div>
+            <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
 
             <div class="row">
               <?php foreach ($menu[$id] as $foods) : ?>
-                <div class="col col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="col col-lg-3 col-md-6 col-sm-6 col-12">
                   <div class="card card-product-grid">
-                    <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="img-wrap" style="background-image: url(./assets/img/<?php echo $foods->menu_picture; ?>);"></a>
+                    <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
 
-                    <div class="card-body" align="center">
+                    <div class="card-body">
                       <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu"><?php echo $foods->menu_name; ?></a>
+                      <p class="text-price">Rp. <?php echo number_format($foods->menu_price); ?></p>
                     </div>
                   </div>
                 </div>

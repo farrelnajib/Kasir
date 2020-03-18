@@ -4,3 +4,5 @@
 <IfModule !authz_core_module>
     Deny from all
 </IfModule>
+
+RewriteCond $1 !^(index\.php|assets|upload|robots\.txt|.*\.css)

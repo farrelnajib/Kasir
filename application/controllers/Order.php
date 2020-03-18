@@ -28,15 +28,6 @@ class Order extends CI_Controller
             $data['menu'][$category->category_id] = $temp;
         }
 
-        // foreach ($data['category'] as $category) {
-        //     echo $category->category_name . ": ";
-        //     foreach ($data['menu'][$category->category_id] as $menu) {
-        //         echo $menu->menu_name . " ";
-        //     }
-
-        //     echo "| ";
-        // }
-
         $this->load->view('index', $data);
     }
 }

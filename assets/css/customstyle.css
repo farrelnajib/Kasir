@@ -45,3 +45,10 @@
 	font-weight: 900;
 	text-decoration: none;
 }
+
+.text-price {
+	font-weight: 800;
+	font-size: 20px;
+	font-style: italic;
+	color: #FA591D;
+}

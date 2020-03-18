@@ -14,6 +14,9 @@ $price = set_value('price');
 $category = set_value('category');
 $picture = set_value('menu_image');
 $status = set_value('status');
+if (empty($status)) {
+  $status = 1;
+}
 
 if (isset($menu) && count($menu) > 0) {
   $id = $menu[0]->menu_id;
@@ -24,9 +27,6 @@ if (isset($menu) && count($menu) > 0) {
   $status = $menu[0]->status;
 }
 
-if (empty($status)) {
-  $status = 1;
-}
 ?>
 
 
@@ -95,7 +95,7 @@ if (empty($status)) {
               <!-- Category form -->
               <div class="form-group">
                 <label for="category">Category <span class="mandatory">*</span></label>
-                <select name="category" id="category" class="form-control <?php echo form_error('category') ? 'is-invalid' : '' ?> select-with-select2">
+                <select name="category" id="select2" class="form-control select2 <?php echo form_error('category') ? 'is-invalid' : '' ?>" style="width: 100%;">
                   <option value="0" selected disabled>Select category...</option>
                   <?php foreach ($categories as $cat) : ?>
                     <option <?php echo $cat->category_id == $category ? 'selected="selected"' : ''; ?> value="<?php echo $cat->category_id; ?>"><?php echo $cat->category_name; ?></option>
@@ -119,18 +119,20 @@ if (empty($status)) {
 
               <!-- Image form -->
               <div class="form-group">
-                <label>Upload image file <small>(png, jpg, gif)</small><span class="mandatory">*</span></label>
-                <input type="file" class="form-control-file <?php echo form_error('menu_image') ? 'is-invalid' : '' ?>" id="menu_image" name="menu_image" />
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input <?php echo form_error('menu_image') ? 'is-invalid' : '' ?>" id="menu_image" name="menu_image" />
+                  <label class="custom-file-label" for="menu_image">Choose file</label>
 
-                <div class="invalid-feedback">
-                  <?php echo form_error('menu_image'); ?>
+                  <div class="invalid-feedback">
+                    <?php echo form_error('menu_image'); ?>
+                  </div>
                 </div>
               </div>
 
               <!-- Status form -->
               <div class="form-group">
                 <label for="status">Status <span class="mandatory">*</span></label>
-                <select name="status" id="status" class="form-control select-with-select2">
+                <select name="status" id="status" class="form-control">
                   <option value="1" <?php echo $status == 1 ? 'selected' : ''; ?>>Available</option>
                   <option value="0" <?php echo $status == 0 ? 'selected' : ''; ?>>Out of stock</option>
                 </select>
@@ -138,7 +140,7 @@ if (empty($status)) {
 
 
               <!-- Cancel button -->
-              <a href="<?php echo base_url('admin/menu'); ?>"><button type="button" class="btn btn-outline-primary">Cancel</button></a>
+              <a href="<?php echo base_url('admin/menu'); ?>"><button type="button" class="btn btn-outline-danger">Cancel</button></a>
 
               <!-- Submit button -->
               <input class="btn btn-primary" type="submit" name="btn" value="Save" />

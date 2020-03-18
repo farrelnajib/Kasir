@@ -2,7 +2,7 @@
 	"use strict"; // Start of use strict
 
 	$(document).ready(function () {
-		if ($(window).width() < 768) {
+		if ($(window).width() <= 768) {
 			$("body").toggleClass("sidebar-toggled");
 			$(".sidebar").toggleClass("toggled");
 		}

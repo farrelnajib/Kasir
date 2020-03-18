@@ -21,6 +21,7 @@ class Menu_model extends CI_Model
     public function getByCategory($id)
     {
         $this->db->where('category_id', $id);
+        $this->db->order_by('menu_name');
         return $this->db->get($this->_table)->result();
     }
 
