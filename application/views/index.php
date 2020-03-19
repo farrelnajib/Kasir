@@ -35,7 +35,7 @@
           <!-- Search bar -->
           <form class="form-inline">
             <div class="input-group shadow" style="float: right;">
-              <input type="text" class="form-control border-0 small" placeholder="Search for...">
+              <input type="text" id="search-bar" class="form-control border-0 small" placeholder="Search for...">
               <div class="input-group-append">
                 <button class="btn btn-primary" type="button">
                   <i class="fas fa-search fa-sm"></i>
@@ -47,25 +47,28 @@
           <!-- Page Heading -->
 
           <?php foreach ($category as $category) :
-            $id = $category->category_id; ?>
-            <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
+            $id = $category->category_id;
+            if (!empty($menu[$id])) : ?>
+              <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
 
-            <div class="row">
-              <?php foreach ($menu[$id] as $foods) : ?>
-                <div class="col col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div class="card card-product-grid">
-                    <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
+              <div class="row">
+                <?php foreach ($menu[$id] as $foods) : ?>
+                  <div class="col col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-product-grid">
+                      <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
 
-                    <div class="card-body">
-                      <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu"><?php echo $foods->menu_name; ?></a>
-                      <p class="text-price">Rp. <?php echo number_format($foods->menu_price); ?></p>
+                      <div class="card-body">
+                        <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu"><?php echo $foods->menu_name; ?></a>
+                        <p class="text-price">Rp. <?php echo number_format($foods->menu_price); ?></p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              <?php endforeach; ?>
-            </div>
-            <hr>
-          <?php endforeach; ?>
+                <?php endforeach; ?>
+              </div>
+              <hr>
+
+          <?php endif;
+          endforeach; ?>
 
 
         </div>
@@ -92,7 +95,21 @@
   <!-- Logout Modal-->
   <?php $this->load->view('_partials/modal'); ?>
 
-  <?php $this->load->view('_partials/js'); ?>
+  <?php $this->load->view('admin/_partials/js'); ?>
+
+  <script>
+    $('#search-bar').keyup(function() {
+      var query = $(this).val();
+      $(".card .card-body .text-menu").each(function() {
+        var text = $(this).text().toLowerCase();
+        if (text.indexOf(query) != -1) {
+          $(this).parent().parent().parent().show();
+        } else {
+          $(this).parent().parent().parent().hide();
+        }
+      });
+    });
+  </script>
 
 </body>
 

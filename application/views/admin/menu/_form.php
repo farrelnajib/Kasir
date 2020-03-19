@@ -85,7 +85,7 @@ if (isset($menu) && count($menu) > 0) {
                   <div class="input-group-prepend">
                     <span class="input-group-text">Rp.</span>
                   </div>
-                  <input class="form-control <?php echo form_error('price') ? 'is-invalid' : ''; ?>" id="price" type="text" name="price" placeholder="Insert menu price..." value="<?php echo $price; ?>">
+                  <input class="form-control <?php echo form_error('price') ? 'is-invalid' : ''; ?>" id="price" type="number" name="price" placeholder="Insert menu price..." value="<?php echo $price; ?>">
                   <div class="invalid-feedback">
                     <?php echo form_error('price'); ?>
                   </div>
