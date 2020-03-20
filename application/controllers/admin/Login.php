@@ -63,6 +63,6 @@ class Login extends CI_Controller
         $this->session->sess_destroy();
 
         $this->session->set_flashdata('success', 'You have been logged out');
-        redirect(base_url('admin/login'));
+        redirect(base_url('login'));
     }
 }

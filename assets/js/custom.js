@@ -1,6 +1,10 @@
 $(document).ready(function () {
-	$(".select2").select2();
+	$(".select2").select2({
+		theme: 'bootstrap4',
+		placeholder: $(this).attr('placeholder')
+	});
 	bsCustomFileInput.init();
+	$("#dataTable").DataTable();
 });
 
 function readURL(input) {
@@ -20,4 +24,17 @@ function readURL(input) {
 
 $("#menu_image").change(function () {
 	readURL(this);
+});
+
+
+$('#search-bar').keyup(function () {
+	var query = $(this).val();
+	$(".card .card-body .text-menu").each(function () {
+		var text = $(this).text().toLowerCase();
+		if (text.indexOf(query) != -1) {
+			$(this).parent().parent().parent().show();
+		} else {
+			$(this).parent().parent().parent().hide();
+		}
+	});
 });

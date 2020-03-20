@@ -55,13 +55,15 @@
                     <th>Price</th>
                     <th>Image file</th>
                     <th>Status</th>
-                    <th class="action">Action</th>
+                    <th>Action</th>
                   </thead>
 
                   <tbody>
                     <?php foreach ($menu as $menu) : ?>
                       <tr>
-                        <td><?php echo $menu->category_name; ?></td>
+                        <td>
+                          <label class="td-label"><?php echo $menu->category_name; ?></label>
+                        </td>
                         <td><?php echo $menu->menu_name; ?></td>
                         <td>Rp. <?php echo number_format($menu->menu_price, 0); ?></td>
                         <td><img src="<?php echo base_url('assets/img/') . $menu->menu_picture; ?>" style="max-width: 100px;"></td>
@@ -69,11 +71,11 @@
                           <div class="badge badge-pill <?php echo $menu->status == 1 ? 'badge-success' : 'badge-danger'; ?>"><?php echo $menu->status == 1 ? 'Available' : 'Out of stock'; ?></div>
                         </td>
                         <td align="center">
-                          <a href="<?php echo base_url('admin/menu/details/') . $menu->menu_id ?>">
+                          <a href="<?php echo base_url('admin/menu/details/') . $menu->menu_id ?>" class="btn btn-circle btn-primary">
                             <i class="far fa-edit"></i>
                           </a>
-                          <a href="<?php echo base_url('admin/menu/delete/') . $menu->menu_id ?>">
-                            <i class="far fa-trash-alt" style="color: red;"></i>
+                          <a href="<?php echo base_url('admin/menu/delete/') . $menu->menu_id ?>" class="btn btn-circle btn-danger">
+                            <i class="far fa-trash-alt"></i>
                           </a>
                         </td>
                       </tr>

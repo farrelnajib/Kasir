@@ -119,6 +119,7 @@ if (isset($menu) && count($menu) > 0) {
 
               <!-- Image form -->
               <div class="form-group">
+                <label for="menu_image">Image file <span class="mandatory">*</span></label>
                 <div class="custom-file">
                   <input type="file" class="custom-file-input <?php echo form_error('menu_image') ? 'is-invalid' : '' ?>" id="menu_image" name="menu_image" />
                   <label class="custom-file-label" for="menu_image">Choose file</label>

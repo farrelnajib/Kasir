@@ -1,5 +1,12 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('admin'); ?>">
+    <div class="sidebar-brand-icon rotate-n-15">
+      <i class="fas fa-coffee"></i>
+    </div>
+    <div class="sidebar-brand-text mx-3">Waroenk Abnormal</div>
+  </a>
+
   <!-- Sidebar Toggle (Topbar) -->
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
     <i class="fa fa-bars"></i>

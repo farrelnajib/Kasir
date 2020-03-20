@@ -52,18 +52,22 @@
               <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
 
               <div class="row">
-                <?php foreach ($menu[$id] as $foods) : ?>
-                  <div class="col col-lg-3 col-md-6 col-sm-6 col-12">
-                    <div class="card card-product-grid">
-                      <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
+                <?php foreach ($menu[$id] as $foods) :
+                  if ($foods->status == 1) : ?>
+                    <div class="col col-lg-3 col-md-6 col-sm-6 col-12">
+                      <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>">
+                        <div class="card card-product-grid">
+                          <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
 
-                      <div class="card-body">
-                        <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu"><?php echo $foods->menu_name; ?></a>
-                        <p class="text-price">Rp. <?php echo number_format($foods->menu_price); ?></p>
-                      </div>
+                          <div class="card-body">
+                            <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu"><?php echo $foods->menu_name; ?></a>
+                            <p class="text-price">Rp. <?php echo number_format($foods->menu_price); ?></p>
+                          </div>
+                        </div>
+                      </a>
                     </div>
-                  </div>
-                <?php endforeach; ?>
+                <?php endif;
+                endforeach; ?>
               </div>
               <hr>
 
@@ -97,19 +101,6 @@
 
   <?php $this->load->view('admin/_partials/js'); ?>
 
-  <script>
-    $('#search-bar').keyup(function() {
-      var query = $(this).val();
-      $(".card .card-body .text-menu").each(function() {
-        var text = $(this).text().toLowerCase();
-        if (text.indexOf(query) != -1) {
-          $(this).parent().parent().parent().show();
-        } else {
-          $(this).parent().parent().parent().hide();
-        }
-      });
-    });
-  </script>
 
 </body>
 

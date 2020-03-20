@@ -8,19 +8,27 @@
 	}
 }
 
+td * {
+	vertical-align: middle;
+}
+
+.mandatory {
+	color: #ff3131;
+}
+
 .login-image {
-	background: url(../img/undraw_Login_v483.png);
+	background-image: url(../img/undraw_powerful_26ry.svg);
 	background-position: center;
 	background-size: cover;
 }
 
 .card-product-grid {
 	margin-bottom: 20px;
+	transition: all 0.2s ease-out;
 }
 
 .card-product-grid:hover {
 	box-shadow: 0px 0px 20px #e0e0e0;
-	transition: all 0.2s ease-in-out;
 }
 
 .card-product-grid::after {

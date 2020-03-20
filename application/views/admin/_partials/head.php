@@ -14,6 +14,7 @@ $total = sizeof($seg); ?>
 
 <!-- Custom styles for this template-->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<link href="<?php echo base_url(); ?>assets/css/select2-bootstrap4.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>assets/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>assets/css/customstyle.css" rel="stylesheet" type="text/css">
 <link href="<?php echo base_url(); ?>assets/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
