@@ -33,7 +33,7 @@
 
 
           <!-- Page Heading -->
-          <div class="card shadow">
+          <div class="card shadow mb-4">
             <div class="card-header">
               <div class="row">
                 <div class="col col-6">
@@ -58,11 +58,11 @@
                       <tr>
                         <td><?php echo $cat->category_name; ?></td>
                         <td class="action" align="center">
-                          <a href="<?php echo base_url('admin/categories/details/') . $cat->category_id ?>">
+                          <a href="<?php echo base_url('admin/categories/details/') . $cat->category_id ?>" class="btn btn-circle btn-primary" title="Edit">
                             <i class="far fa-edit"></i>
                           </a>
-                          <a href="<?php echo base_url('admin/categories/delete/') . $cat->category_id ?>">
-                            <i class="far fa-trash-alt" style="color: red;"></i>
+                          <a href="<?php echo base_url('admin/categories/delete/') . $cat->category_id ?>" class="btn btn-circle btn-danger" title="Delete">
+                            <i class="far fa-trash-alt"></i>
                           </a>
                         </td>
                       </tr>

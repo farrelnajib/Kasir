@@ -38,3 +38,52 @@ $('#search-bar').keyup(function () {
 		}
 	});
 });
+
+
+$('#discount').keyup(function () {
+	let disc = $(this).val();
+
+	if (!disc || Number(disc) < 0) {
+		$(this).val(0);
+	} else {
+		disc = Number(disc);
+
+		if (disc > 100) {
+			disc = 100;
+		}
+		$(this).val(disc);
+	}
+
+	let harga_akhir = $('#price').val() * ((100 - disc) / 100);
+	$('#final-price').val(harga_akhir);
+});
+
+
+$('#price').keyup(function () {
+	let harga = $(this).val();
+	let diskon = $('#discount').val();
+	let harga_akhir = harga * ((100 - diskon) / 100);
+
+	$('#final-price').val(harga_akhir);
+});
+
+
+$('#final-price').keyup(function () {
+	let price = Number($('#price').val());
+	let final_price = $(this).val();
+
+	if (!final_price) {
+		$(this).val(0);
+	} else {
+		final_price = Number(final_price);
+		$(this).val(final_price);
+	}
+
+	if (final_price > price) {
+		final_price = price;
+		$(this).val(final_price);
+	}
+
+	let discount = 100 - (final_price / price * 100);
+	$('#discount').val(discount);
+});

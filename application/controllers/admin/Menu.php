@@ -75,6 +75,8 @@ class Menu extends CI_Controller
 
         $this->form_validation->set_rules('name', 'name', 'trim|required|is_unique[menu.menu_name]');
         $this->form_validation->set_rules('price', 'price', 'trim|required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('discount', 'discount', 'trim|numeric');
+        $this->form_validation->set_rules('final-price', 'final price', 'trim|numeric');
         $this->form_validation->set_rules('category', 'category', 'callback_select_validate');
         $this->form_validation->set_rules('menu_image', 'Image', 'callback_check_picture');
         $this->form_validation->set_message('required', 'Please fill the %s');
@@ -108,6 +110,8 @@ class Menu extends CI_Controller
                         $data = [
                             'menu_name' => $this->input->post('name'),
                             'menu_price' => $this->input->post('price'),
+                            'menu_discount' => $this->input->post('discount'),
+                            'menu_final_price' => $this->input->post('final-price'),
                             'category_id' => $this->input->post('category'),
                             'menu_picture' => $img,
                             'status' => $this->input->post('status')
@@ -168,6 +172,8 @@ class Menu extends CI_Controller
 
         $this->form_validation->set_rules('name', 'Name', 'required|callback_check_name');
         $this->form_validation->set_rules('price', 'price', 'required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('discount', 'discount', 'trim|numeric');
+        $this->form_validation->set_rules('final-price', 'final price', 'trim|numeric');
         $this->form_validation->set_rules('category', 'category', 'callback_select_validate');
         $this->form_validation->set_rules('menu_image', 'Image', 'callback_check_edit_picture');
         $this->form_validation->set_message('required', 'Please fill the %s');
@@ -179,6 +185,8 @@ class Menu extends CI_Controller
             $dataUpdate = [
                 'menu_name' => $this->input->post('name'),
                 'menu_price' => $this->input->post('price'),
+                'menu_discount' => $this->input->post('discount'),
+                'menu_final_price' => $this->input->post('final-price'),
                 'category_id' => $this->input->post('category'),
                 'status' => $this->input->post('status')
             ];

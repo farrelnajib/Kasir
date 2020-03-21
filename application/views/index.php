@@ -60,8 +60,17 @@
                           <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
 
                           <div class="card-body">
-                            <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu"><?php echo $foods->menu_name; ?></a>
-                            <p class="text-price">Rp. <?php echo number_format($foods->menu_price); ?></p>
+                            <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu">
+                              <?php echo $foods->menu_name; ?>
+                            </a>
+
+                            <?php if ($foods->menu_discount > 0) : ?>
+                              <p class="text-danger mb-0"><strike>Rp. <?php echo number_format($foods->menu_price); ?></strike>
+                                <span class="badge badge-danger"><?php echo $foods->menu_discount; ?>%</span>
+                              </p>
+
+                            <?php endif; ?>
+                            <p class="text-price">Rp. <?php echo number_format($foods->menu_final_price); ?></p>
                           </div>
                         </div>
                       </a>

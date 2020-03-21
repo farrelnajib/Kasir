@@ -34,7 +34,7 @@
           <?php $this->load->view('admin/_partials/alerts') ?>
 
           <!-- Page Heading -->
-          <div class="card shadow">
+          <div class="card shadow mb-4">
             <div class="card-header">
               <div class="row">
                 <div class="col col-6">
@@ -65,16 +65,22 @@
                           <label class="td-label"><?php echo $menu->category_name; ?></label>
                         </td>
                         <td><?php echo $menu->menu_name; ?></td>
-                        <td>Rp. <?php echo number_format($menu->menu_price, 0); ?></td>
+                        <td>
+                          <?php if ($menu->menu_discount > 0) : ?>
+                            <strike class="text-danger">Rp. <?php echo number_format($menu->menu_price); ?></strike>
+                            <span class="badge badge-danger"><?php echo $menu->menu_discount; ?>%</span>
+                          <?php endif; ?>
+                          <p>Rp. <?php echo number_format($menu->menu_final_price, 0); ?></p>
+                        </td>
                         <td><img src="<?php echo base_url('assets/img/') . $menu->menu_picture; ?>" style="max-width: 100px;"></td>
                         <td>
                           <div class="badge badge-pill <?php echo $menu->status == 1 ? 'badge-success' : 'badge-danger'; ?>"><?php echo $menu->status == 1 ? 'Available' : 'Out of stock'; ?></div>
                         </td>
                         <td align="center">
-                          <a href="<?php echo base_url('admin/menu/details/') . $menu->menu_id ?>" class="btn btn-circle btn-primary">
+                          <a href="<?php echo base_url('admin/menu/details/') . $menu->menu_id ?>" class="btn btn-circle btn-primary" title="Edit">
                             <i class="far fa-edit"></i>
                           </a>
-                          <a href="<?php echo base_url('admin/menu/delete/') . $menu->menu_id ?>" class="btn btn-circle btn-danger">
+                          <a href="<?php echo base_url('admin/menu/delete/') . $menu->menu_id ?>" class="btn btn-circle btn-danger" title="Delete">
                             <i class="far fa-trash-alt"></i>
                           </a>
                         </td>
