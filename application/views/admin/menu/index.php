@@ -7,7 +7,7 @@
 
 </head>
 
-<body id="page-top">
+<body id="page-top" class="sidebar-toggled">
 
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -74,7 +74,7 @@
                         </td>
                         <td><img src="<?php echo base_url('assets/img/') . $menu->menu_picture; ?>" style="max-width: 100px;"></td>
                         <td>
-                          <div class="badge badge-pill <?php echo $menu->status == 1 ? 'badge-success' : 'badge-danger'; ?>"><?php echo $menu->status == 1 ? 'Available' : 'Out of stock'; ?></div>
+                          <label class="border rounded-pill px-2 <?php echo $menu->status == 1 ? 'border-success text-success' : 'border-danger text-danger'; ?>"><?php echo $menu->status == 1 ? 'Available' : 'Out of stock'; ?></label>
                         </td>
                         <td align="center">
                           <a href="<?php echo base_url('admin/menu/details/') . $menu->menu_id ?>" class="btn btn-circle btn-primary" title="Edit">
@@ -88,35 +88,35 @@
                     <?php endforeach; ?>
                   </tbody>
                 </table>
+                </label>
               </div>
             </div>
+
           </div>
+          <!-- /.container-fluid -->
 
         </div>
-        <!-- /.container-fluid -->
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <?php $this->load->view('admin/_partials/footer') ?>
+        <!-- End of Footer -->
 
       </div>
-      <!-- End of Main Content -->
-
-      <!-- Footer -->
-      <?php $this->load->view('admin/_partials/footer') ?>
-      <!-- End of Footer -->
+      <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Page Wrapper -->
 
-  </div>
-  <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+    <!-- Logout Modal-->
+    <?php $this->load->view('admin/_partials/modal'); ?>
 
-  <!-- Logout Modal-->
-  <?php $this->load->view('admin/_partials/modal'); ?>
-
-  <?php $this->load->view('admin/_partials/js'); ?>
+    <?php $this->load->view('admin/_partials/js'); ?>
 
 </body>
 

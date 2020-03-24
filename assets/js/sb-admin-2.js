@@ -2,7 +2,7 @@
 	"use strict"; // Start of use strict
 
 	$(document).ready(function () {
-		if ($(window).width() <= 768) {
+		if ($(window).width() <= 1024) {
 			$("body").toggleClass("sidebar-toggled");
 			$(".sidebar").toggleClass("toggled");
 		}
@@ -19,7 +19,7 @@
 
 	// Close any open menu accordions when window is resized below 768px
 	$(window).resize(function () {
-		if ($(window).width() < 768) {
+		if ($(window).width() <= 1024) {
 			$('.sidebar .collapse').collapse('hide');
 		};
 	});

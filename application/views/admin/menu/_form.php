@@ -95,12 +95,12 @@ if (isset($menu) && count($menu) > 0) {
                     <div class="input-group-prepend">
                       <span class="input-group-text">Rp.</span>
                     </div>
-                    <input class="form-control <?php echo form_error('price') ? 'is-invalid' : ''; ?>" id="price" type="number" name="price" placeholder="Insert menu price..." value="<?php echo $price; ?>">
+                    <input class="form-control <?php echo form_error('price') ? 'is-invalid' : ''; ?>" id="price" type="text" name="price" placeholder="Insert menu price..." value="<?php echo $price; ?>">
+                    <div class="invalid-feedback">
+                      <?php echo form_error('price'); ?>
+                    </div>
                   </div>
 
-                  <div class="invalid-feedback">
-                    <?php echo form_error('price'); ?>
-                  </div>
                 </div>
 
                 <!-- Discount form -->
@@ -127,11 +127,10 @@ if (isset($menu) && count($menu) > 0) {
                     <div class="input-group-prepend">
                       <span class="input-group-text">Rp.</span>
                     </div>
-                    <input class="form-control <?php echo form_error('final-price') ? 'is-invalid' : ''; ?>" id="final-price" type="number" name="final-price" placeholder="Insert menu final price..." value="<?php echo $final_price; ?>">
-                  </div>
-
-                  <div class="invalid-feedback">
-                    <?php echo form_error('final-price'); ?>
+                    <input class="form-control <?php echo form_error('final-price') ? 'is-invalid' : ''; ?>" id="final-price" type="text" name="final-price" placeholder="Insert menu final price..." value="<?php echo $final_price; ?>">
+                    <div class="invalid-feedback">
+                      <?php echo form_error('final-price'); ?>
+                    </div>
                   </div>
                 </div>
 
@@ -187,7 +186,7 @@ if (isset($menu) && count($menu) > 0) {
                 <a href="<?php echo base_url('admin/menu'); ?>"><button type="button" class="btn btn-outline-danger">Cancel</button></a>
 
                 <!-- Submit button -->
-                <input class="btn btn-primary" type="submit" name="btn" value="Save" />
+                <input class="btn btn-primary" type="submit" name="btn" value="Save" id="submit-menu" />
                 <?php echo form_close(); ?>
               </div>
 
@@ -222,6 +221,10 @@ if (isset($menu) && count($menu) > 0) {
   <?php $this->load->view('admin/_partials/modal'); ?>
 
   <?php $this->load->view('admin/_partials/js'); ?>
+
+  <script>
+
+  </script>
 
 </body>
 

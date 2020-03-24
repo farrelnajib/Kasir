@@ -5,6 +5,9 @@ $(document).ready(function () {
 	});
 	bsCustomFileInput.init();
 	$("#dataTable").DataTable();
+
+	$('#price').number(true);
+	$('#final-price').number(true);
 });
 
 function readURL(input) {
@@ -61,10 +64,12 @@ $('#discount').keyup(function () {
 
 $('#price').keyup(function () {
 	let harga = $(this).val();
+	console.log(harga);
 	let diskon = $('#discount').val();
 	let harga_akhir = harga * ((100 - diskon) / 100);
 
 	$('#final-price').val(harga_akhir);
+
 });
 
 

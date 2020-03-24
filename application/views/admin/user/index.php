@@ -62,11 +62,11 @@
                         <td><?php echo $user->user_email; ?></td>
                         <td><?php echo $user->role_id == 1 ? 'Admin / Boss' : 'Kasir'; ?></td>
                         <td align="center">
-                          <a href="<?php echo base_url('admin/user/details/') . $user->user_id ?>">
+                          <a href="<?php echo base_url('admin/user/details/') . $user->user_id ?>" class="btn btn-circle btn-primary">
                             <i class="far fa-edit"></i>
                           </a>
-                          <a href="<?php echo base_url('admin/user/delete/') . $user->user_id ?>">
-                            <i class="far fa-trash-alt" style="color: red;"></i>
+                          <a href="<?php echo base_url('admin/user/delete/') . $user->user_id ?>" class="btn btn-circle btn-danger">
+                            <i class="far fa-trash-alt"></i>
                           </a>
                         </td>
                       </tr>

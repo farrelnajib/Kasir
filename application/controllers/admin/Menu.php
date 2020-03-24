@@ -74,9 +74,9 @@ class Menu extends CI_Controller
         $this->upload->initialize($config);
 
         $this->form_validation->set_rules('name', 'name', 'trim|required|is_unique[menu.menu_name]');
-        $this->form_validation->set_rules('price', 'price', 'trim|required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('price', 'price', 'trim|required');
         $this->form_validation->set_rules('discount', 'discount', 'trim|numeric');
-        $this->form_validation->set_rules('final-price', 'final price', 'trim|numeric');
+        $this->form_validation->set_rules('final-price', 'final price', 'trim|required');
         $this->form_validation->set_rules('category', 'category', 'callback_select_validate');
         $this->form_validation->set_rules('menu_image', 'Image', 'callback_check_picture');
         $this->form_validation->set_message('required', 'Please fill the %s');
@@ -109,9 +109,9 @@ class Menu extends CI_Controller
                         $img = $upload_data['file_name'];
                         $data = [
                             'menu_name' => $this->input->post('name'),
-                            'menu_price' => $this->input->post('price'),
+                            'menu_price' => $this->parse_number($this->input->post('price')),
                             'menu_discount' => $this->input->post('discount'),
-                            'menu_final_price' => $this->input->post('final-price'),
+                            'menu_final_price' => $this->parse_number($this->input->post('final-price')),
                             'category_id' => $this->input->post('category'),
                             'menu_picture' => $img,
                             'status' => $this->input->post('status')
@@ -154,6 +154,15 @@ class Menu extends CI_Controller
         }
     }
 
+    private function parse_number($number, $dec_point = null)
+    {
+        if (empty($dec_point)) {
+            $locale = localeconv();
+            $dec_point = $locale['decimal_point'];
+        }
+        return floatval(str_replace($dec_point, '.', preg_replace('/[^\d' . preg_quote($dec_point) . ']/', '', $number)));
+    }
+
 
     public function details($id)
     {
@@ -171,9 +180,9 @@ class Menu extends CI_Controller
         $this->upload->initialize($config);
 
         $this->form_validation->set_rules('name', 'Name', 'required|callback_check_name');
-        $this->form_validation->set_rules('price', 'price', 'required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('price', 'price', 'required');
         $this->form_validation->set_rules('discount', 'discount', 'trim|numeric');
-        $this->form_validation->set_rules('final-price', 'final price', 'trim|numeric');
+        $this->form_validation->set_rules('final-price', 'final price', 'trim');
         $this->form_validation->set_rules('category', 'category', 'callback_select_validate');
         $this->form_validation->set_rules('menu_image', 'Image', 'callback_check_edit_picture');
         $this->form_validation->set_message('required', 'Please fill the %s');
@@ -184,9 +193,9 @@ class Menu extends CI_Controller
         } else {
             $dataUpdate = [
                 'menu_name' => $this->input->post('name'),
-                'menu_price' => $this->input->post('price'),
+                'menu_price' => $this->parse_number($this->input->post('price')),
                 'menu_discount' => $this->input->post('discount'),
-                'menu_final_price' => $this->input->post('final-price'),
+                'menu_final_price' => $this->parse_number($this->input->post('final-price')),
                 'category_id' => $this->input->post('category'),
                 'status' => $this->input->post('status')
             ];
