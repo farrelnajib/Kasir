@@ -1,4 +1,4 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<div class="bg-gradient-primary sidebar sidebar-dark sidebar-kasir" id="accordionSidebar">
 
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('admin'); ?>">
@@ -11,117 +11,105 @@
   <!-- Divider -->
   <hr class="sidebar-divider my-0">
 
-  <!-- Nav Item - Dashboard -->
-  <li class="nav-item <?php echo $this->uri->segment(2) == '' ? 'active' : ''; ?>">
-    <a class="nav-link" href="<?php echo base_url('admin'); ?>">
-      <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>Dashboard</span></a>
-  </li>
+  <div class="container">
+    <div class="row">
+      <div class="col col-12">
+        <span style="color: white; font-weight: bold;">Customer</span>
+        <form action="#" method="post">
+          <div class="form-group">
+            <input type="text" name="name" id="name" class="form-control" placeholder="Nama...">
+          </div>
+          <div class="form-group">
+            <input type="text" name="telp" id="telp" class="form-control" placeholder="No Telp...">
+          </div>
 
-  <!-- Divider -->
-  <hr class="sidebar-divider">
-
-  <!-- Heading -->
-  <div class="sidebar-heading">
-    Main Menu
+          <input type="submit" value="Save" class="btn btn-success btn-block">
+        </form>
+      </div>
+    </div>
   </div>
 
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item <?php echo ($this->uri->segment(2) == 'categories') ? 'active' : ''; ?>">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#masterCollapse" aria-expanded="true" aria-controls="masterCollapse">
-      <i class="<?php echo ($this->uri->segment(2) == 'categories') ? 'fas' : 'far'; ?> fa-fw fa-circle"></i>
-      <span>Master</span>
-    </a>
-    <div id="masterCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Master:</h6>
-        <a class="collapse-item" href="<?php echo base_url(); ?>admin/categories">Categories</a>
-        <a class="collapse-item" href="<?php echo base_url(); ?>admin/menu">Menu</a>
-      </div>
-    </div>
-  </li>
-
-  <!-- Nav Item - Food Menu -->
-  <li class="nav-item <?php echo ($this->uri->segment(2) == 'menu') ? 'active' : ''; ?>">
-    <a class="nav-link" href="<?php echo base_url(); ?>admin/menu">
-      <i class="fas fa-fw fa-utensils"></i>
-      <span>Menu</span></a>
-  </li>
-
-  <!-- Nav Item - Utilities Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-      <i class="fas fa-fw fa-wrench"></i>
-      <span>Utilities</span>
-    </a>
-    <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Custom Utilities:</h6>
-        <a class="collapse-item" href="utilities-color.html">Colors</a>
-        <a class="collapse-item" href="utilities-border.html">Borders</a>
-        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-        <a class="collapse-item" href="utilities-other.html">Other</a>
-      </div>
-    </div>
-  </li>
-
   <!-- Divider -->
-  <hr class="sidebar-divider">
+  <hr class="sidebar-divider mt-3">
 
-  <!-- Heading -->
-  <div class="sidebar-heading">
-    Settings
+  <div class="container">
+    <!-- <table style="color: white">
+      <tr>
+        <td class="p-2">
+          <i class="fa fa-trash" style="color: white; height: 100%;"></i>
+        </td>
+        <td class="p-1">
+          <p style="font-weight: bold; margin-top: auto; margin-bottom: auto;">Krabby Patty<br>
+            @ 25,000
+          </p>
+        </td>
+        <td class="p-1">
+          <input type="number" class="form-control input-group-sm" id="quantity" min="1" max="10" value="2">
+        </td>
+        <td class="p-1">
+          <p class="margin-top: auto; margin-bottom: auto;">50,000</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="p-2">
+          <i class="fa fa-trash" style="color: white; height: 100%;"></i>
+        </td>
+        <td class="p-1">
+          <p style="font-weight: bold; margin-top: auto; margin-bottom: auto;">Chum Stick<br>
+            @ 15,000
+          </p>
+        </td>
+        <td class="p-1">
+          <input type="number" class="form-control input-group-sm" id="quantity" min="1" max="10" value="1">
+        </td>
+        <td class="p-1">
+          <p class="margin-top: auto; margin-bottom: auto;">15,000</p>
+        </td>
+      </tr>
+    </table> -->
+
+    <div class="row my-3" style="color: white;">
+      <div class="col col-1">
+        <i class="fa fa-trash" style="color: white; height: 100%;"></i>
+      </div>
+      <div class="col col-5">
+        <p style="font-weight: bold; margin-top: auto; margin-bottom: auto;">Chum Stick<br>
+          @ 15,000
+        </p>
+      </div>
+      <div class="col col-3">
+        <input type="number" class="form-control form-control-sm" id="quantity" min="1" max="10" value="1">
+      </div>
+      <div class="col col-3">
+        <p class="margin-top: auto; margin-bottom: auto;">15,000</p>
+      </div>
+    </div>
+
+    <div class="row" style="color: white;">
+      <div class="col col-1">
+        <i class="fa fa-trash" style="color: white; height: 100%; vertical-align: middle;"></i>
+      </div>
+      <div class="col col-5">
+        <span style="font-weight: bold; margin-top: auto; margin-bottom: auto;">Krabby Patty</span>
+        <span>@ 25,000</span>
+      </div>
+      <div class="col col-3">
+        <input type="number" class="form-control form-control-sm" id="quantity" min="1" max="10" value="2">
+      </div>
+      <div class="col col-3">
+        <p class="margin-top: auto; margin-bottom: auto;">50,000</p>
+      </div>
+    </div>
   </div>
 
 
-  <!-- Nav Item - Users -->
-  <li class="nav-item <?php echo ($this->uri->segment(2) == 'user') ? 'active' : ''; ?>">
-    <a class="nav-link" href="<?php echo base_url(); ?>admin/user">
-      <i class="<?php echo ($this->uri->segment(2) == 'user') ? 'fas' : 'far'; ?> fa-fw fa-user"></i>
-      <span>User</span></a>
-  </li>
 
 
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-      <i class="fas fa-fw fa-folder"></i>
-      <span>Pages</span>
-    </a>
-    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Login Screens:</h6>
-        <a class="collapse-item" href="login.html">Login</a>
-        <a class="collapse-item" href="register.html">Register</a>
-        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-        <div class="collapse-divider"></div>
-        <h6 class="collapse-header">Other Pages:</h6>
-        <a class="collapse-item" href="404.html">404 Page</a>
-        <a class="collapse-item" href="blank.html">Blank Page</a>
-      </div>
-    </div>
-  </li>
-
-  <!-- Nav Item - Charts -->
-  <li class="nav-item">
-    <a class="nav-link" href="charts.html">
-      <i class="fas fa-fw fa-chart-area"></i>
-      <span>Charts</span></a>
-  </li>
-
-  <!-- Nav Item - Tables -->
-  <li class="nav-item">
-    <a class="nav-link" href="tables.html">
-      <i class="fas fa-fw fa-table"></i>
-      <span>Tables</span></a>
-  </li>
-
-  <!-- Divider -->
-  <hr class="sidebar-divider d-none d-md-block">
 
   <!-- Sidebar Toggler (Sidebar) -->
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>
   </div>
 
-</ul>
+</div>

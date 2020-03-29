@@ -12,9 +12,6 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <!-- Sidebar -->
-    <?php $this->load->view('_partials/sidebar'); ?>
-    <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -46,42 +43,135 @@
 
           <!-- Page Heading -->
 
-          <?php foreach ($category as $category) :
-            $id = $category->category_id;
-            if (!empty($menu[$id])) : ?>
-              <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
+          <div class="row">
 
-              <div class="row">
-                <?php foreach ($menu[$id] as $foods) :
-                  if ($foods->status == 1) : ?>
-                    <div class="col col-lg-3 col-md-6 col-sm-6 col-12">
-                      <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>">
-                        <div class="card card-product-grid">
-                          <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>"><img src="./assets/img/<?php echo $foods->menu_picture; ?>" alt="..." class="card-img-top"></a>
+            <!-- List barang -->
+            <div class="col col-lg-7 col-md-12 col-12">
+              <?php foreach ($category as $category) :
+                $id = $category->category_id;
+                if (!empty($menu[$id])) : ?>
+                  <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
 
-                          <div class="card-body">
-                            <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>" class="text-menu">
-                              <?php echo $foods->menu_name; ?>
-                            </a>
+                  <div class="row">
+                    <?php foreach ($menu[$id] as $foods) :
+                      if ($foods->status == 1) : ?>
+                        <div class="col col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                          <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>">
+                            <div class="card card-product-grid">
+                              <div class="img-wrap" style="background-image: url('./assets/img/<?php echo $foods->menu_picture; ?>')"></div>
 
-                            <?php if ($foods->menu_discount > 0) : ?>
-                              <p class="text-danger mb-0"><strike>Rp. <?php echo number_format($foods->menu_price); ?></strike>
-                                <span class="badge badge-danger"><?php echo $foods->menu_discount; ?>%</span>
-                              </p>
+                              <div class="card-body">
+                                <div class="text-menu">
+                                  <?php echo $foods->menu_name; ?>
+                                </div>
 
-                            <?php endif; ?>
-                            <p class="text-price">Rp. <?php echo number_format($foods->menu_final_price); ?></p>
-                          </div>
+                                <?php if ($foods->menu_discount > 0) : ?>
+                                  <p class="text-danger mb-0"><strike>Rp. <?php echo number_format($foods->menu_price); ?></strike>
+                                    <span class="badge badge-danger"><?php echo $foods->menu_discount; ?>%</span>
+                                  </p>
+
+                                <?php endif; ?>
+                                <p class="text-price">Rp. <?php echo number_format($foods->menu_final_price); ?></p>
+                              </div>
+                            </div>
+                          </a>
                         </div>
-                      </a>
-                    </div>
-                <?php endif;
-                endforeach; ?>
-              </div>
-              <hr>
+                    <?php endif;
+                    endforeach; ?>
+                  </div>
+                  <hr>
 
-          <?php endif;
-          endforeach; ?>
+              <?php endif;
+              endforeach; ?>
+            </div>
+
+            <!-- Cart nya -->
+            <div class="col col-lg-5 col-md-12 col-12">
+              <h1 class="h3 mt-3 text-gray-800">Payment</h1>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <p style="font-weight: bold;">Customer</p>
+                  <form action="#" method="post">
+                    <div class="form-group">
+                      <input type="text" name="name" id="name" class="form-control" placeholder="Nama...">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="telp" id="telp" class="form-control" placeholder="No Telp...">
+                    </div>
+
+                    <input type="submit" value="Save" class="btn btn-primary btn-block">
+                  </form>
+
+                  <hr class="sidebar-divider mt-3">
+
+                  <p style="font-weight: bold;">Order details</p>
+
+                  <div class="row my-3">
+                    <div class="col col-5">
+                      <p><strong>Chum Stick</strong><br>
+                        @ 15,000
+                      </p>
+                    </div>
+                    <div class="col col-4">
+                      <button class="btn btn-sm btn-circle btn-danger kurang"> - </button>
+                      <span class="mx-2">1</span>
+                      <button class="btn btn-sm btn-circle btn-primary tambah"> + </button>
+                    </div>
+                    <div class="col col-3">
+                      <p style="text-align: right;">15,000</p>
+                    </div>
+                  </div>
+
+                  <div class="row my-3">
+                    <div class="col col-5">
+                      <p><strong>Kelp Nougat Crunch</strong><br>
+                        @ 10,000
+                      </p>
+                    </div>
+                    <div class="col col-4">
+                      <button class="btn btn-sm btn-circle btn-danger kurang"> - </button>
+                      <span class="mx-2">1</span>
+                      <button class="btn btn-sm btn-circle btn-primary tambah"> + </button>
+                    </div>
+                    <div class="col col-3">
+                      <p style="text-align: right;">20,000</p>
+                    </div>
+                  </div>
+
+                  <hr class="sidebar-divider mt-3">
+
+                  <table style="width: 100%;">
+                    <tr>
+                      <td>
+                        <p style="font-weight: bold;">Subtotal</p>
+                      </td>
+                      <td align="right">
+                        <p>30,000</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p style="font-weight: bold;">Tax</p>
+                      </td>
+                      <td align="right">
+                        <p>3,000</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p style="font-weight: bold;">Total</p>
+                      </td>
+                      <td align="right">
+                        <p>33,000</p>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <input class="btn btn-block btn-primary" type="submit" name="order" id="order" value="Place order">
+                </div>
+              </div>
+            </div>
+          </div>
 
 
         </div>
@@ -109,6 +199,12 @@
   <?php $this->load->view('_partials/modal'); ?>
 
   <?php $this->load->view('admin/_partials/js'); ?>
+
+  <script>
+    $('.btn').click(function() {
+      this.blur()
+    });
+  </script>
 
 
 </body>
