@@ -55,9 +55,9 @@
                   <div class="row">
                     <?php foreach ($menu[$id] as $foods) :
                       if ($foods->status == 1) : ?>
-                        <div class="col col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="col col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 mb-4">
                           <a href="<?php echo base_url('order/add/' . $foods->menu_id); ?>">
-                            <div class="card card-product-grid">
+                            <div class="card card-product-grid h-100 mb-0">
                               <div class="img-wrap" style="background-image: url('./assets/img/<?php echo $foods->menu_picture; ?>')"></div>
 
                               <div class="card-body">
@@ -66,12 +66,12 @@
                                 </div>
 
                                 <?php if ($foods->menu_discount > 0) : ?>
-                                  <p class="text-danger mb-0"><strike>Rp. <?php echo number_format($foods->menu_price); ?></strike>
+                                  <div class="text-price"><strike>Rp. <?php echo number_format($foods->menu_price); ?></strike>
                                     <span class="badge badge-danger"><?php echo $foods->menu_discount; ?>%</span>
-                                  </p>
+                                  </div>
 
                                 <?php endif; ?>
-                                <p class="text-price">Rp. <?php echo number_format($foods->menu_final_price); ?></p>
+                                <div class="text-price">Rp. <?php echo number_format($foods->menu_final_price); ?></div>
                               </div>
                             </div>
                           </a>
@@ -87,7 +87,7 @@
 
             <!-- Cart nya -->
             <div class="col col-lg-5 col-md-12 col-12">
-              <h1 class="h3 mt-3 text-gray-800">Payment</h1>
+              <h1 class="h3 mt-3 text-gray-800">Order Detail</h1>
               <div class="card mb-3">
                 <div class="card-body">
                   <p style="font-weight: bold;">Customer</p>
@@ -104,7 +104,7 @@
 
                   <hr class="sidebar-divider mt-3">
 
-                  <p style="font-weight: bold;">Order details</p>
+                  <p style="font-weight: bold;">Order Items</p>
 
                   <div class="row my-3">
                     <div class="col col-5">

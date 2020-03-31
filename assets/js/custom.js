@@ -35,9 +35,9 @@ $('#search-bar').keyup(function () {
 	$(".card .card-body .text-menu").each(function () {
 		var text = $(this).text().toLowerCase();
 		if (text.indexOf(query) != -1) {
-			$(this).parent().parent().parent().show();
+			$(this).parent().parent().parent().parent().show();
 		} else {
-			$(this).parent().parent().parent().hide();
+			$(this).parent().parent().parent().parent().hide();
 		}
 	});
 });
