@@ -36,7 +36,7 @@ class Login extends CI_Controller
                 $data['role'] = $user->role_id;
                 $data['isLoggedIn'] = true;
                 $this->session->set_userdata($data);
-                redirect(base_url('order'));
+                redirect(base_url());
             } else {
                 $this->session->set_flashdata('danger', 'Wrong password');
                 $this->load->view('admin/login');

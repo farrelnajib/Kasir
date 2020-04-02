@@ -7,14 +7,17 @@
     <div class="sidebar-brand-text mx-3">Waroenk Abnormal</div>
   </a>
 
-  <!-- Sidebar Toggle (Topbar) -->
-  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-    <i class="fa fa-bars"></i>
-  </button>
-
 
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">
+
+    <?php if ($this->uri->segment(1) == '') : ?>
+      <li class="nav-item dropdown no-arrow mx-1 btn-nav">
+        <a class="btn btn-primary" href="#">
+          <i class="fa fa-plus"></i> New Transaction
+        </a>
+      </li>
+    <?php endif; ?>
 
     <div class="topbar-divider d-none d-sm-block"></div>
 

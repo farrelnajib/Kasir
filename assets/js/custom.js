@@ -4,7 +4,7 @@ $(document).ready(function () {
 		placeholder: $(this).attr('placeholder')
 	});
 	bsCustomFileInput.init();
-	$("#dataTable").DataTable();
+	$(".dataTable").DataTable();
 
 	$('#price').number(true);
 	$('#final-price').number(true);
@@ -31,7 +31,7 @@ $("#menu_image").change(function () {
 
 
 $('#search-bar').keyup(function () {
-	var query = $(this).val();
+	var query = $(this).val().toLowerCase();
 	$(".card .card-body .text-menu").each(function () {
 		var text = $(this).text().toLowerCase();
 		if (text.indexOf(query) != -1) {
