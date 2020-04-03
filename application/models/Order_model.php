@@ -18,8 +18,45 @@ class Order_model extends CI_Model
         return $this->db->get($this->_table)->result();
     }
 
+    public function getPurchased($tid)
+    {
+        $this->db->where('transaction_id', $tid);
+        $this->db->select('menu_id');
+        return $this->db->get($this->_table)->result();
+    }
+
+    public function getSubtotal($tid)
+    {
+        $this->db->select_sum('order_subtotal');
+        $this->db->select('transaction_id');
+        $this->db->where('transaction_id', $tid);
+        return $this->db->get($this->_table)->result();
+    }
+
+    public function getOrderID($tid, $mid)
+    {
+        $this->db->where('transaction_id', $tid);
+        $this->db->where('menu_id', $mid);
+        return $this->db->get($this->_table)->result();
+    }
+
     public function insert($data)
     {
-        return $this->db->insert($this->_table, $data);
+        $this->db->insert($this->_table, $data);
+        return true;
+    }
+
+    public function update($id, $data)
+    {
+        $this->db->where('order_id', $id);
+        $this->db->update($this->_table, $data);
+        return true;
+    }
+
+    public function delete($id)
+    {
+        $this->db->where('order_id', $id);
+        $this->db->delete($this->_table);
+        return true;
     }
 }

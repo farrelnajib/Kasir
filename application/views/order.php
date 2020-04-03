@@ -56,16 +56,16 @@
                     <?php foreach ($menu[$id] as $foods) :
                       if ($foods->status == 1) : ?>
                         <div class="col col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 mb-4">
-                          <a href="javascript:void(0);" class="product-link">
+                          <a href="javascript:void(0);" class="product-link <?php echo in_array($foods->menu_id, $purchasedArray) ? 'disabled' : ''; ?>">
                             <form action="<?= base_url('order/add/'); ?>" method="POST">
+                              <input type="hidden" value="<?php echo $foods->menu_id; ?>" name="menu_id">
                               <input type="hidden" value="<?= $transaction_id; ?>" name="transaction_id">
-                              <input type="hidden" value="<?= $foods->menu_id; ?>" name="menu_id">
                               <input type="hidden" value="1" name="quantity">
                               <input type="hidden" value="<?= $foods->menu_name; ?>" name="name">
                               <input type="hidden" value="<?= $foods->menu_final_price; ?>" name="price">
                             </form>
 
-                            <div class="card card-product-grid h-100 mb-0">
+                            <div class="card card-product-grid h-100 mb-0 <?php echo in_array($foods->menu_id, $purchasedArray) ? 'disabled' : ''; ?>">
                               <div class="img-wrap" style="background-image: url('../assets/img/<?php echo $foods->menu_picture; ?>')"></div>
 
                               <div class="card-body">
@@ -118,12 +118,16 @@
                     <?php if (!empty($orders)) :
                       foreach ($orders as $order) : ?>
                         <div class="row my-3 items">
-                          <input type="hidden" value="<?= $order->menu_id; ?>" name="menu_id">
-                          <input type="hidden" value="<?= $order->menu_name; ?>" name="name">
-                          <input type="hidden" value="<?= $order->menu_price; ?>" name="price">
+                          <form method="POST">
+                            <input type="hidden" value="<?= $order->transaction_id; ?>" name="transaction_id">
+                            <input type="hidden" value="<?= $order->order_id; ?>" name="order_id">
+                            <input type="hidden" value="<?= $order->menu_id; ?>" name="menu_id">
+                            <input type="hidden" value="<?= $order->order_quantity; ?>" name="amount">
+                            <input type="hidden" value="<?= $order->menu_final_price; ?>" name="price">
+                          </form>
                           <div class="col col-5">
                             <p class="cart-product-name"><strong><?= $order->menu_name; ?></strong><br>
-                              @ <span class="price"><?= $order->menu_price; ?></span>
+                              @ <span class="price"><?= $order->menu_final_price; ?></span>
                             </p>
                           </div>
                           <div class="col col-4">
@@ -149,7 +153,7 @@
                             <p style="font-weight: bold;">Subtotal</p>
                           </td>
                           <td align="right">
-                            <p>30,000</p>
+                            <p id="subtotal"><?= $subtotal->order_subtotal; ?></p>
                           </td>
                         </tr>
                         <tr>
@@ -157,7 +161,8 @@
                             <p style="font-weight: bold;">Tax</p>
                           </td>
                           <td align="right">
-                            <p>3,000</p>
+                            <p id="tax"><?php $tax = $subtotal->order_subtotal * 0.1;
+                                        echo $tax; ?></p>
                           </td>
                         </tr>
                         <tr>
@@ -165,7 +170,8 @@
                             <p style="font-weight: bold;">Total</p>
                           </td>
                           <td align="right">
-                            <p>33,000</p>
+                            <p id="total"><?php $total = $subtotal->order_subtotal + $tax;
+                                          echo $total; ?></p>
                           </td>
                         </tr>
                       </table>
@@ -267,24 +273,54 @@
       let parent = $(this).parent();
       let sibling = parent.siblings();
       let amountSpan = parent.children('span');
-      let amount = Number(amountSpan.html());
+      let amount = Number(parent.siblings("form").children("input[name='amount']").val());
+      let order_id = Number(parent.siblings("form").children("input[name='order_id']").val());
+      let menu_id = Number(parent.siblings("form").children("input[name='menu_id']").val());
+      let price = Number(parent.siblings("form").children("input[name='price']").val());
 
       if ($(this).hasClass("tambah")) {
         amount += 1;
+        parent.siblings("form").children("input[name='amount']").val(amount);
       } else {
         amount -= 1;
+        parent.siblings("form").children("input[name='amount']").val(amount);
       }
+
+      let action = "<?= base_url('order/'); ?>";
 
       if (amount == 0) {
-        parent.parent().remove();
+        action += "delete/";
       } else {
-        let price = sibling.find("span[class='price']").html();
-        price *= amount;
-
-        amountSpan.html(amount);
-        let subtotalDiv = sibling.find('.subtotal-product');
-        subtotalDiv.html(price);
+        action += "edit/";
       }
+
+      $.ajax({
+        url: action,
+        type: "POST",
+        data: parent.siblings("form").serialize(),
+        success: function(data) {
+          var json = JSON.parse(data);
+
+          if (amount == 0) {
+            let link = $('.product-link').children("form").children("input[name='menu_id'][value='" + menu_id + "']");
+            link.parents('a').removeClass("disabled");
+            link.parents('a').prop("href", "javascript:void(0);");
+
+            let productDiv = link.parent().siblings('.card-product-grid');
+            productDiv.removeClass("disabled");
+            parent.parent().remove();
+          } else {
+            price *= amount;
+            amountSpan.html(amount);
+            let subtotalDiv = sibling.find('.subtotal-product');
+            subtotalDiv.html(price);
+          }
+
+          $('#subtotal').html(json["subtotal"]);
+          $('#tax').html(json["tax"]);
+          $('#total').html(json["total"]);
+        }
+      });
     });
 
     $('.product-link').click(function() {
@@ -295,18 +331,33 @@
       let quantity = 1;
       let subtotal = price * quantity;
 
+      $(this).addClass("disabled");
+      $(this).removeAttr("href");
+      $(this).children(".card").addClass("disabled");
+
       $.ajax({
         url: $(this).children('form').attr('action'),
-        type: 'POST',
+        type: "POST",
         data: $(this).children('form').serialize(),
-        dataType: "JSON",
         success: function(data) {
-          if (data.status) {
+          var json = JSON.parse(data);
+          console.log(json);
+          if (json["status"] == true) {
+            let order_id = Number(json["order_id"]);
+
+            $('#subtotal').html(json["subtotal"]);
+            $('#tax').html(json["tax"]);
+            $('#total').html(json["total"]);
+
             $('.orders').append(
               `<div class="row my-3 items">
-                <input type="hidden" value="` + menu_id + `" name="menu_id">
-                <input type="hidden" value="` + name + `" name="name">
-                <input type="hidden" value="` + price + `" name="price">
+                <form method="POST">
+                  <input type="hidden" value="` + transaction_id + `" name="transaction_id">
+                  <input type="hidden" value="` + order_id + `" name="order_id">
+                  <input type="hidden" value="` + menu_id + `" name="menu_id">
+                  <input type="hidden" value="1" name="amount">
+                  <input type="hidden" value="` + price + `" name="price">
+                </form>
                 <div class="col col-5">
                   <p class="cart-product-name"><strong>` + name + `</strong><br>
                     @ <span class="price">` + price + `</span>
@@ -322,10 +373,6 @@
                 </div>
               </div>`
             );
-
-            $(this).addClass('disabled');
-          } else {
-            <?php $this->session->set_flashdata('danger', 'Menu already added'); ?>
           }
         }
       });

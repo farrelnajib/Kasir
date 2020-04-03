@@ -18,11 +18,12 @@ class Menu_model extends CI_Model
         return $this->db->get($this->_table)->result();
     }
 
-    public function getByCategory($id)
+    public function getByCategory($cid, $tid)
     {
-        $this->db->where('category_id', $id);
+        $this->db->where('category_id', $cid);
         $this->db->order_by('menu_name');
         return $this->db->get($this->_table)->result();
+        // return $this->db->query('SELECT * FROM `menu` LEFT OUTER JOIN (SELECT `transaction_id`, `menu_id` FROM `orders` WHERE `orders`.`transaction_id` = ' . $tid . ') `aliasorder` ON `menu`.`menu_id` = `aliasorder`.`menu_id` WHERE `category_id` = ' . $cid . '')->result();
     }
 
     public function getUnique($column, $term, $id)

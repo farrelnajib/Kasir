@@ -57,4 +57,6 @@ $route['admin'] = 'admin/dashboard';
 $route['admin/logout'] = 'admin/login/logout';
 $route['order'] = 'transaction';
 $route['order/add'] = 'order/add';
+$route['order/edit'] = 'order/edit';
+$route['order/delete'] = 'order/delete';
 $route['order/(:any)'] = 'order/index/$1';
