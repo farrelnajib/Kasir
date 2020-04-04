@@ -35,6 +35,13 @@ class Transaction_model extends CI_Model
         return $this->db->insert($this->_table, $data);
     }
 
+    public function insertCustomer($tid, $data)
+    {
+        $this->db->where('transaction_id', $tid);
+        $this->db->update($this->_table, $data);
+        return true;
+    }
+
     public function update($id, $data)
     {
         $this->db->where('transaction_id', $id);

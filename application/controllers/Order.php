@@ -27,6 +27,7 @@ class Order extends CI_Controller
         $data['orders'] = $this->Order_model->getOrders($id);
         $data['subtotal'] = $this->Order_model->getSubtotal($id)[0];
         $data['purchased'] = $this->Order_model->getPurchased($id);
+        $data['transaction'] = $this->Transaction_model->getById($id);
         $data['purchasedArray'] = [];
 
         foreach ($data['purchased'] as $purchased) {
@@ -126,5 +127,41 @@ class Order extends CI_Controller
                 "status" => false
             ]);
         }
+    }
+
+    private function saveCustomer($tid, $data, $column)
+    {
+        if ($this->Transaction_model->insertCustomer($tid, [$column => $data])) {
+            echo json_encode([
+                "status" => true
+            ]);
+        } else {
+            echo json_encode([
+                "status" => false
+            ]);
+        }
+    }
+
+    public function saveName()
+    {
+        $name = $this->input->post('name');
+        $tid = $this->input->post('transaction_id');
+
+        $this->saveCustomer($tid, $name, 'customer_name');
+    }
+
+    public function savePhone()
+    {
+        $tid = $this->input->post('transaction_id');
+        $phone = $this->input->post('phone');
+        $column = 'customer_email';
+        if (is_numeric($phone)) {
+            $column = 'customer_phone';
+            $this->Transaction_model->insertCustomer($tid, ['customer_email' => '']);
+        } else {
+            $this->Transaction_model->insertCustomer($tid, ['customer_phone' => '']);
+        }
+
+        $this->saveCustomer($tid, $phone, $column);
     }
 }

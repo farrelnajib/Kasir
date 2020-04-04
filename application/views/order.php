@@ -32,7 +32,7 @@
           <!-- Search bar -->
           <form class="form-inline">
             <div class="input-group shadow" style="float: right;">
-              <input type="text" id="search-bar" class="form-control border-0 small" placeholder="Search for...">
+              <input type="text" id="search-bar" class="form-control border-0 small" placeholder="Search for..." autofocus="true">
               <div class="input-group-append">
                 <button class="btn btn-primary" type="button">
                   <i class="fas fa-search fa-sm"></i>
@@ -98,22 +98,42 @@
               <h1 class="h3 mt-3 text-gray-800">Order Detail</h1>
               <div class="card mb-3 order-detail">
                 <div class="card-body">
-                  <p style="font-weight: bold;">Customer</p>
-                  <form action="#" method="post">
-                    <div class="form-group">
-                      <input type="text" name="name" id="name" class="form-control" placeholder="Nama...">
-                    </div>
-                    <div class="form-group">
-                      <input type="text" name="telp" id="telp" class="form-control" placeholder="No Telp...">
-                    </div>
 
-                    <input type="submit" value="Save" class="btn btn-primary btn-block">
+                  <!-- Customer details -->
+                  <p style="font-weight: bold;">Customer</p>
+                  <form method="POST">
+
+                    <?php
+                    $name = false;
+                    $number = false;
+
+                    if (empty($transaction[0]->customer_name)) : ?>
+                      <div class="form-group">
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Nama...">
+                      </div>
+                    <?php else :
+                      $name = true; ?>
+                      <p class="text-cust-name">Name: <strong><?php echo $transaction[0]->customer_name; ?></strong> <a href="javascript:void(0);" id="NameButton"><i class="fa fa-edit"></i></a></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($transaction[0]->customer_phone)) :
+                      $number = true; ?>
+                      <p class="text-cust-phone">Phone: <strong><?= $transaction[0]->customer_phone; ?></strong> <a href="javascript:void(0);" id="PhoneButton"><i class="fa fa-edit"></i></a></p>
+                    <?php elseif (!empty($transaction[0]->customer_email)) :
+                      $number = true; ?>
+                      <p class="text-cust-phone">Email: <strong><?= $transaction[0]->customer_email; ?></strong> <a href="javascript:void(0);" id="PhoneButton"><i class="fa fa-edit"></i></a></p>
+                    <?php else : ?>
+                      <div class="form-group">
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone or email...">
+                      </div>
+                    <?php endif; ?>
+
                   </form>
 
                   <hr class="sidebar-divider mt-3">
 
+                  <!-- Order details -->
                   <p id="order-items"><strong>Order items</strong></p>
-
                   <div class="orders">
                     <?php if (!empty($orders)) :
                       foreach ($orders as $order) : ?>
@@ -231,6 +251,8 @@
   <?php $this->load->view('admin/_partials/js'); ?>
 
   <script>
+    tid = <?= $transaction_id; ?>;
+
     $(document).on('click', '.btn', function() {
       this.blur()
     });
@@ -324,58 +346,185 @@
     });
 
     $('.product-link').click(function() {
-      let transaction_id = $(this).children('form').children("input[name='transaction_id']").val();
-      let menu_id = $(this).children('form').children("input[name='menu_id']").val();
-      let name = $(this).children('form').children("input[name='name']").val();
-      let price = $(this).children('form').children("input[name='price']").val();
-      let quantity = 1;
-      let subtotal = price * quantity;
+      if (!$(this).hasClass("disabled")) {
+        let transaction_id = $(this).children('form').children("input[name='transaction_id']").val();
+        let menu_id = $(this).children('form').children("input[name='menu_id']").val();
+        let name = $(this).children('form').children("input[name='name']").val();
+        let price = $(this).children('form').children("input[name='price']").val();
+        let quantity = 1;
+        let subtotal = price * quantity;
 
-      $(this).addClass("disabled");
-      $(this).removeAttr("href");
-      $(this).children(".card").addClass("disabled");
+        $(this).addClass("disabled");
+        $(this).removeAttr("href");
+        $(this).children(".card").addClass("disabled");
 
-      $.ajax({
-        url: $(this).children('form').attr('action'),
-        type: "POST",
-        data: $(this).children('form').serialize(),
-        success: function(data) {
-          var json = JSON.parse(data);
-          console.log(json);
-          if (json["status"] == true) {
-            let order_id = Number(json["order_id"]);
+        $.ajax({
+          url: $(this).children('form').attr('action'),
+          type: "POST",
+          data: $(this).children('form').serialize(),
+          success: function(data) {
+            var json = JSON.parse(data);
+            console.log(json);
+            if (json["status"] == true) {
+              let order_id = Number(json["order_id"]);
 
-            $('#subtotal').html(json["subtotal"]);
-            $('#tax').html(json["tax"]);
-            $('#total').html(json["total"]);
+              $('#subtotal').html(json["subtotal"]);
+              $('#tax').html(json["tax"]);
+              $('#total').html(json["total"]);
 
-            $('.orders').append(
-              `<div class="row my-3 items">
-                <form method="POST">
-                  <input type="hidden" value="` + transaction_id + `" name="transaction_id">
-                  <input type="hidden" value="` + order_id + `" name="order_id">
-                  <input type="hidden" value="` + menu_id + `" name="menu_id">
-                  <input type="hidden" value="1" name="amount">
-                  <input type="hidden" value="` + price + `" name="price">
-                </form>
-                <div class="col col-5">
-                  <p class="cart-product-name"><strong>` + name + `</strong><br>
-                    @ <span class="price">` + price + `</span>
-                  </p>
-                </div>
-                <div class="col col-4">
-                  <button class="btn btn-sm btn-circle btn-danger kurang"> - </button>
-                  <span class="mx-1">` + quantity + `</span>
-                  <button class="btn btn-sm btn-circle btn-primary tambah"> + </button>
-                </div>
-                <div class="col col-3">
-                  <p style="text-align: right;" class="subtotal-product">` + subtotal + `</p>
-                </div>
-              </div>`
-            );
+              $('.orders').append(
+                `<div class="row my-3 items">
+                  <form method="POST">
+                    <input type="hidden" value="` + transaction_id + `" name="transaction_id">
+                    <input type="hidden" value="` + order_id + `" name="order_id">
+                    <input type="hidden" value="` + menu_id + `" name="menu_id">
+                    <input type="hidden" value="1" name="amount">
+                    <input type="hidden" value="` + price + `" name="price">
+                  </form>
+                  <div class="col col-5">
+                    <p class="cart-product-name"><strong>` + name + `</strong><br>
+                      @ <span class="price">` + price + `</span>
+                    </p>
+                  </div>
+                  <div class="col col-4">
+                    <button class="btn btn-sm btn-circle btn-danger kurang"> - </button>
+                    <span class="mx-1">` + quantity + `</span>
+                    <button class="btn btn-sm btn-circle btn-primary tambah"> + </button>
+                  </div>
+                  <div class="col col-3">
+                    <p style="text-align: right;" class="subtotal-product">` + subtotal + `</p>
+                  </div>
+                </div>`
+              );
+            }
           }
+        });
+      }
+    });
+
+    function isEmail(email) {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      return regex.test(email);
+    }
+
+    function insert_customer(serializedData, insertedData, whichForm, whichColumn) {
+      serializedData += '&transaction_id=' + tid;
+      let phoneOrEmail = whichColumn;
+      let phone = true;
+      let email = true;
+      let action = "<?= base_url('order/'); ?>";
+
+      if (whichColumn == 'Phone') {
+        if (!isEmail(insertedData)) {
+          email = false;
+          phoneOrEmail = 'Phone'
         }
-      });
+        if (!$.isNumeric(insertedData)) {
+          phone = false;
+          phoneOrEmail = 'Email'
+        }
+
+        action += 'savePhone/';
+      } else {
+        action += 'saveName/';
+      }
+
+      console.log(action);
+
+      if (!phone && !email) {
+        console.log("Invalid phone or email");
+        if (!whichForm.hasClass("is-invalid")) {
+          whichForm.addClass('is-invalid');
+          whichForm.after(`
+          <div class="invalid-feedback">
+            Invalid email or phone number
+          </div>
+        `);
+        }
+      } else {
+        $.ajax({
+          url: action,
+          type: "POST",
+          data: serializedData,
+          success: function(data) {
+            var json = JSON.parse(data);
+            console.log(json);
+            if (json["status"]) {
+              whichForm.parent().after(`
+              <p>` + phoneOrEmail + `: <strong>` + insertedData + `</strong> <a href="javascript:void(0);" id="` + whichColumn + `Button"><i class="fa fa-edit"></i></a></p>
+            `);
+              whichForm.parent().remove();
+            }
+          }
+        });
+      }
+    }
+
+    $('.order-detail').on('focus', 'input', function() {
+      $(this).removeClass("is-invalid");
+      $(this).siblings('.invalid-feedback').remove();
+    });
+
+    $('.order-detail').focus().on('blur', 'input[name="name"]', function() {
+      let name = $(this).val();
+
+      if (name != '') {
+        dataToInsert = "name=" + name;
+        insert_customer(dataToInsert, name, $(this), "Name");
+      }
+    });
+
+    $('.order-detail').on('keypress', 'input[name="name"]', function(e) {
+      let key = e.which;
+      if (key == 13) {
+        let name = $(this).val();
+
+        if (name != '') {
+          dataToInsert = "name=" + name;
+          insert_customer(dataToInsert, name, $(this), "Name");
+        }
+      }
+    });
+
+    $('.order-detail').focus().on('blur', 'input[name="phone"]', function() {
+      let phone = $(this).val();
+
+      if (phone != '') {
+        dataToInsert = "phone=" + phone;
+        insert_customer(dataToInsert, phone, $(this), "Phone");
+      }
+    });
+
+    $('.order-detail').on('keypress', 'input[name="phone"]', function(e) {
+      let key = e.which;
+      if (key == 13) {
+        let phone = $(this).val();
+
+        if (phone != '') {
+          dataToInsert = "phone=" + phone;
+          insert_customer(dataToInsert, phone, $(this), "Phone");
+        }
+      }
+    });
+
+    $('.order-detail').on('click', 'a#NameButton', function() {
+      nama = $(this).siblings('strong').html();
+      $(this).parent().after(`
+        <div class="form-group">
+          <input type="text" name="name" id="NameButton" class="form-control" placeholder="Nama..." value="` + nama + `">
+        </div>
+      `);
+      $(this).parent().remove();
+    });
+
+    $('.order-detail').on('click', 'a#PhoneButton', function() {
+      phone = $(this).siblings('strong').html();
+      $(this).parent().after(`
+        <div class="form-group">
+          <input type="text" name="phone" id="PhoneButton" class="form-control" placeholder="Phone or email..." value="` + phone + `">
+        </div>
+      `);
+      $(this).parent().remove();
     });
   </script>
 
