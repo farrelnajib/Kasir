@@ -131,4 +131,25 @@ class User extends CI_Controller
             }
         }
     }
+
+    public function delete($id)
+    {
+        if (empty($id) || $this->User_model->getById($id) == null) {
+            show_404();
+        }
+
+        $user = $this->User_model->getById($id);
+        if (count($user) > 0) {
+            if ($this->User_model->delete($id)) {
+                $this->session->set_flashdata('success', 'User successfully deleted');
+                redirect(base_url('admin/user'));
+            } else {
+                $this->session->set_flashdata('danger', 'Failed to delete user');
+                redirect(base_url('admin/user'));
+            }
+        } else {
+            $this->session->set_flashdata('danger', 'User not found');
+            redirect(base_url('admin/user'));
+        }
+    }
 }

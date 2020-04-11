@@ -235,7 +235,7 @@ class Menu extends CI_Controller
                 redirect(base_url('admin/menu'));
             }
         } else {
-            $this->session->set_flashdata('danger', 'Booth not found');
+            $this->session->set_flashdata('danger', 'Menu not found');
             redirect(base_url('admin/menu'));
         }
     }

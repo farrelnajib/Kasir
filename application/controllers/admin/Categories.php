@@ -99,7 +99,7 @@ class Categories extends CI_Controller
                 redirect(base_url('admin/categories'));
             }
         } else {
-            $this->session->set_flashdata('danger', 'Booth not found');
+            $this->session->set_flashdata('danger', 'Category not found');
             redirect(base_url('admin/categories'));
         }
     }
