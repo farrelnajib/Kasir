@@ -12,6 +12,8 @@ class Order extends CI_Controller
         $this->load->model('Menu_model');
         $this->load->model('Order_model');
         $this->load->model('Transaction_model');
+        $this->load->model('Payment_model');
+        $this->load->model('Payment_method_model');
 
         if (empty($this->session->userdata('id')) || $this->session->userdata('isLoggedIn') != true) {
             $this->session->set_flashdata('danger', 'Please log in first');
@@ -25,10 +27,13 @@ class Order extends CI_Controller
         $data['category'] = $this->Category_model->getAll();
         $data['transaction_id'] = $id;
         $data['orders'] = $this->Order_model->getOrders($id);
-        $data['subtotal'] = $this->Order_model->getSubtotal($id)[0];
         $data['purchased'] = $this->Order_model->getPurchased($id);
         $data['transaction'] = $this->Transaction_model->getById($id);
+        $data['payments'] = $this->Payment_model->getByTransactionId($id);
+        $data['totalPayments'] = $this->Payment_model->getTotalPayment($id)[0];
+        $data['methods'] = $this->Payment_method_model->getAll();
         $data['purchasedArray'] = [];
+        $data['totals'] = $this->get_subtotal($id);
 
         foreach ($data['purchased'] as $purchased) {
             array_push($data['purchasedArray'], $purchased->menu_id);
@@ -77,11 +82,11 @@ class Order extends CI_Controller
         if (count($unique) == 0) {
             if ($this->Order_model->insert($data)) {
                 $order_id = $this->Order_model->getOrderID($tid, $mid)[0]->order_id;
-                $order_data = $this->get_subtotal($tid);
 
-                $order_data["status"] = true;
-                $order_data["order_id"] = $order_id;
-                echo json_encode($order_data);
+                echo json_encode([
+                    "status" => true,
+                    "order_id" => $order_id
+                ]);
             } else {
                 echo json_encode(["status" => false]);
             }
@@ -102,13 +107,9 @@ class Order extends CI_Controller
         ];
 
         if ($this->Order_model->update($oid, $data)) {
-            $order_data = $this->get_subtotal($tid);
-            $order_data["status"] = true;
-            echo json_encode($order_data);
+            echo json_encode(["status" => true]);
         } else {
-            echo json_encode([
-                "status" => false
-            ]);
+            echo json_encode(["status" => false]);
         }
     }
 
@@ -163,5 +164,74 @@ class Order extends CI_Controller
         }
 
         $this->saveCustomer($tid, $phone, $column);
+    }
+
+    public function addPayment()
+    {
+        $tid = $this->input->post('transaction_id');
+        $payment_id = $this->Payment_model->getLatestId();
+        if (count($payment_id) == 0) {
+            $payment_id = 0;
+        } else {
+            $payment_id = $payment_id[0]->latest_id;
+        }
+        $payment_id += 1;
+        $data = [
+            'payment_id' => $payment_id,
+            'transaction_id' => $tid,
+            'method_id' => 1
+        ];
+
+        if ($this->Payment_model->insert($data)) {
+            echo json_encode([
+                "status" => true,
+                "payment_id" => $payment_id
+            ]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
+
+    public function removePayment()
+    {
+        $pid = $this->input->post('payment_id');
+
+        if ($this->Payment_model->delete($pid)) {
+            echo json_encode(["status" => true]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
+
+    public function changePaymentMethod()
+    {
+        $pid = $this->input->post('payment_id');
+        $method = $this->input->post('method');
+
+        if ($this->Payment_model->update($pid, ['method_id' => $method])) {
+            echo json_encode(["status" => true]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
+
+    public function changePaymentAmount()
+    {
+        $pid = $this->input->post('payment_id');
+        $tid = $this->input->post('transaction_id');
+        $payment = $this->input->post('payment');
+        $totalPayment = $this->input->post('total_payment');
+        $changes = $this->input->post('changes');
+
+        $data = [
+            'transaction_payment' => $totalPayment,
+            'transaction_change' => $changes
+        ];
+
+        if ($this->Payment_model->update($pid, ['payment_amount' => $payment]) && $this->Transaction_model->update($tid, $data)) {
+            echo json_encode(["status" => true]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
     }
 }

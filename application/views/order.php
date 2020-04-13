@@ -151,9 +151,9 @@
                             </p>
                           </div>
                           <div class="col col-4">
-                            <button class="btn btn-sm btn-circle btn-danger kurang"> - </button>
+                            <button class="btn order-amount-btn btn-sm btn-circle btn-danger kurang"> - </button>
                             <span class="mx-1"><?= $order->order_quantity; ?></span>
-                            <button class="btn btn-sm btn-circle btn-primary tambah"> + </button>
+                            <button class="btn order-amount-btn btn-sm btn-circle btn-primary tambah"> + </button>
                           </div>
                           <div class="col col-3">
                             <p style="text-align: right;" class="subtotal-product"><?= $order->order_subtotal; ?></p>
@@ -173,7 +173,7 @@
                             <p style="font-weight: bold;">Subtotal</p>
                           </td>
                           <td align="right">
-                            <p id="subtotal"><?= $subtotal->order_subtotal; ?></p>
+                            <p id="subtotal"><?= $totals['subtotal']; ?></p>
                           </td>
                         </tr>
                         <tr>
@@ -181,8 +181,7 @@
                             <p style="font-weight: bold;">Tax</p>
                           </td>
                           <td align="right">
-                            <p id="tax"><?php $tax = $subtotal->order_subtotal * 0.1;
-                                        echo $tax; ?></p>
+                            <p id="tax"><?= $totals['tax']; ?></p>
                           </td>
                         </tr>
                         <tr>
@@ -190,8 +189,7 @@
                             <p style="font-weight: bold;">Total</p>
                           </td>
                           <td align="right">
-                            <p id="total"><?php $total = $subtotal->order_subtotal + $tax;
-                                          echo $total; ?></p>
+                            <p id="total"><?= $totals['total']; ?></p>
                           </td>
                         </tr>
                       </table>
@@ -201,23 +199,57 @@
                   <hr class="sidebar-divider mt-0">
 
                   <p><strong>Payment</strong></p>
-                  <div class="row mb-3">
-                    <div class="col col-5">
-                      <select name="method" id="method" class="form-control">
-                        <option value="0" disabled selected>Method...</option>
-                        <option value="1">Cash</option>
-                        <option value="2">Go Pay</option>
-                      </select>
+                  <?php $iterator = 1;
+                  foreach ($payments as $payment) : ?>
+                    <div class="row mb-3">
+                      <input type="hidden" value="<?= $transaction_id; ?>" name="transaction_id">
+                      <input type="hidden" value="<?= $payment->payment_id; ?>" name="payment_id">
+                      <div class="col col-5">
+                        <select name="method" id="method" class="form-control">
+                          <?php foreach ($methods as $method) : ?>
+                            <option value="<?= $method->method_id ?>" <?= $method->method_id == $payment->method_id ? 'selected' : ''; ?>><?= $method->method_name ?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                      <div class="col col-5">
+                        <input type="number" class="form-control" name="amount" placeholder="Amount..." value="<?= $payment->payment_amount; ?>">
+                      </div>
+                      <div class="col col-2">
+                        <?php if ($iterator == count($payments)) : ?>
+                          <button class="btn btn-primary float-right addPayment btn-circle">+</button>
+                        <?php else : ?>
+                          <button class="btn btn-danger float-right removePayment btn-circle">-</button>
+                        <?php endif; ?>
+                      </div>
                     </div>
-                    <div class="col col-5">
-                      <input type="number" class="form-control" name="amount" placeholder="Amount...">
-                    </div>
-                    <div class="col col-2">
-                      <button class="btn btn-primary float-right addPayment btn-circle">+</button>
+                  <?php $iterator++;
+                  endforeach; ?>
+
+                  <hr class="sidebar-divider mt-0">
+
+                  <div class="row">
+                    <div class="col col-12">
+                      <table style="width: 100%;">
+                        <tr>
+                          <td>
+                            <p><strong>Total payments</strong></p>
+                          </td>
+                          <td align="right">
+                            <p id="total-payment"><?= $totalPayments->total; ?></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p><strong>Changes</strong></p>
+                          </td>
+                          <td align="right">
+                            <p id="changes"><?= $totalPayments->total - $totals['total']; ?></p>
+                          </td>
+                        </tr>
+                      </table>
                     </div>
                   </div>
-
-                  <input class="btn btn-block btn-primary" type="submit" name="order" id="order" value="Place order">
+                  <input class="btn btn-block btn-primary" type="submit" name="order" id="order" value="Close bill">
                 </div>
               </div>
             </div>
@@ -251,47 +283,158 @@
   <?php $this->load->view('admin/_partials/js'); ?>
 
   <script>
-    tid = <?= $transaction_id; ?>;
+    let tid = <?= $transaction_id; ?>;
+
+    let subtotal = <?= $totals['subtotal']; ?>;
+    let tax = <?= $totals['tax']; ?>;
+    let total = <?= $totals['total']; ?>;
+
+    let payments = {};
+    let totalPayment = <?= $totalPayments->total; ?>;
+    let changes = -(total);
+
+    console.log(changes);
 
     $(document).on('click', '.btn', function() {
       this.blur()
     });
 
     $('.card').on('click', '.addPayment', function() {
+      let action = "<?= base_url('order/addPayment'); ?>";
+      let thisElement = $(this);
       let parent = $(this).parent().parent();
-      parent.after(`
-        <div class="row mb-3">
-          <div class="col col-5">
-            <select name="method" id="method" class="form-control">
-              <option value="0" disabled selected>Method...</option>
-              <option value="1">Cash</option>
-              <option value="2">Go Pay</option>
-            </select>
-          </div>
-          <div class="col col-5">
-            <input type="number" class="form-control" name="amount" placeholder="Amount...">
-          </div>
-          <div class="col col-2">
-            <button class="btn btn-primary float-right addPayment btn-circle">+</button>
-          </div>
-        </div>
-      `);
+      $.ajax({
+        url: action,
+        type: "POST",
+        data: {
+          'transaction_id': parent.find('input[name="transaction_id"]').val(),
+          'method': parent.find('select').val()
+        },
+        success: function(data) {
+          let json = JSON.parse(data);
+          if (json["status"] == true) {
+            parent.after(`
+              <div class="row mb-3">
+                <input type="hidden" value="<?= $transaction_id; ?>" name="transaction_id">
+                <input type="hidden" value="` + json["payment_id"] + `" name="payment_id">
+                <div class="col col-5">
+                  <select name="method" id="method" class="form-control">
+                    <?php foreach ($methods as $method) : ?>
+                      <option value="<?= $method->method_id ?>"><?= $method->method_name ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col col-5">
+                  <input type="number" class="form-control" name="amount" placeholder="Amount...">
+                </div>
+                <div class="col col-2">
+                  <button class="btn btn-primary float-right addPayment btn-circle">+</button>
+                </div>
+              </div>
+            `);
 
-      $(this).removeClass('btn-primary');
-      $(this).removeClass('addPayment');
+            thisElement.removeClass('btn-primary');
+            thisElement.removeClass('addPayment');
 
-      $(this).html('-');
-      $(this).addClass('btn-danger');
-      $(this).addClass('removePayment');
+            thisElement.html('-');
+            thisElement.addClass('btn-danger');
+            thisElement.addClass('removePayment');
+          } else {
+            alert("Failed to save");
+          }
+        }
+      });
     });
 
     $('.card').on('click', '.removePayment', function() {
       let parent = $(this).parent().parent();
-      parent.remove();
+      let paymentID = parent.children('input[name="payment_id"]').val();
+      let action = "<?= base_url('order/removePayment'); ?>";
+
+      $.ajax({
+        url: action,
+        method: "POST",
+        data: {
+          "payment_id": paymentID
+        },
+        success: function(data) {
+          let json = JSON.parse(data);
+
+          if (json["status"]) {
+            totalPayment -= payments[paymentID];
+            changes = totalPayment - total;
+
+            $('#total-payment').html(totalPayment);
+            $('#changes').html(changes);
+            parent.remove();
+          } else {
+            alert("Failed to remove");
+          }
+        }
+      });
+    });
+
+    $('.card').on('keyup', 'input[name="amount"]', function() {
+      let parent = $(this).parent().parent();
+      let paymentId = parent.children('input[name="payment_id"]').val();
+      let totalElement = $('p#total');
+      let totalPaymentElement = $('p#total-payment');
+      let changesElement = $('p#changes');
+      let payment = Number($(this).val());
+
+      let previousPayment = payments[paymentId];
+      if (previousPayment != null) {
+        totalPayment -= previousPayment;
+      }
+      totalPayment += payment;
+      changes = totalPayment - total;
+      payments[paymentId] = payment;
+
+      totalPaymentElement.html(totalPayment);
+      changesElement.html(changes);
+    }).on('blur', 'input[name="amount"]', function() {
+      let parent = $(this).parent().parent();
+      let paymentId = parent.children('input[name="payment_id"]').val();
+      let action = "<?= base_url('order/changePaymentAmount'); ?>"
+
+      $.ajax({
+        url: action,
+        method: "POST",
+        data: {
+          "transaction_id": tid,
+          "payment_id": paymentId,
+          "payment": payments[paymentId],
+          "total_payment": totalPayment,
+          "changes": changes
+        },
+        success: function(data) {
+          let json = JSON.parse(data);
+
+          if (!json["status"]) {
+            alert('Failed to save payment')
+          }
+        }
+      });
+    });
+
+    $('.card').on('change', 'select', function() {
+      let parent = $(this).parent().parent();
+      let method = $(this).val();
+      let paymentID = parent.children('input[name="payment_id"]').val();
+      let action = "<?= base_url('order/changePaymentMethod'); ?>";
+
+      $.ajax({
+        url: action,
+        method: "POST",
+        data: {
+          "payment_id": paymentID,
+          "method": method
+        }
+      });
     });
 
 
-    $('.order-detail').on('click', '.btn', function() {
+    $('.order-detail').on('click', '.order-amount-btn', function() {
       let parent = $(this).parent();
       let sibling = parent.siblings();
       let amountSpan = parent.children('span');
@@ -299,12 +442,14 @@
       let order_id = Number(parent.siblings("form").children("input[name='order_id']").val());
       let menu_id = Number(parent.siblings("form").children("input[name='menu_id']").val());
       let price = Number(parent.siblings("form").children("input[name='price']").val());
+      let tambah = true;
 
       if ($(this).hasClass("tambah")) {
         amount += 1;
         parent.siblings("form").children("input[name='amount']").val(amount);
       } else {
         amount -= 1;
+        tambah = false;
         parent.siblings("form").children("input[name='amount']").val(amount);
       }
 
@@ -322,6 +467,10 @@
         data: parent.siblings("form").serialize(),
         success: function(data) {
           var json = JSON.parse(data);
+          subtotal = tambah ? subtotal + price : subtotal - price;
+          tax = subtotal * 0.1;
+          total = subtotal + tax;
+          changes = totalPayment - total;
 
           if (amount == 0) {
             let link = $('.product-link').children("form").children("input[name='menu_id'][value='" + menu_id + "']");
@@ -338,9 +487,10 @@
             subtotalDiv.html(price);
           }
 
-          $('#subtotal').html(json["subtotal"]);
-          $('#tax').html(json["tax"]);
-          $('#total').html(json["total"]);
+          $('#subtotal').html(subtotal);
+          $('#tax').html(tax);
+          $('#total').html(total);
+          $('#changes').html(changes);
         }
       });
     });
@@ -350,7 +500,7 @@
         let transaction_id = $(this).children('form').children("input[name='transaction_id']").val();
         let menu_id = $(this).children('form').children("input[name='menu_id']").val();
         let name = $(this).children('form').children("input[name='name']").val();
-        let price = $(this).children('form').children("input[name='price']").val();
+        let price = Number($(this).children('form').children("input[name='price']").val());
         let quantity = 1;
         let subtotal = price * quantity;
 
@@ -364,13 +514,17 @@
           data: $(this).children('form').serialize(),
           success: function(data) {
             var json = JSON.parse(data);
-            console.log(json);
             if (json["status"] == true) {
               let order_id = Number(json["order_id"]);
+              subtotal += price;
+              tax = subtotal * 0.1;
+              total = subtotal + tax;
+              changes = totalPayment - total;
 
-              $('#subtotal').html(json["subtotal"]);
-              $('#tax').html(json["tax"]);
-              $('#total').html(json["total"]);
+              $('#subtotal').html(subtotal);
+              $('#tax').html(tax);
+              $('#total').html(total);
+              $('#changes').html(changes);
 
               $('.orders').append(
                 `<div class="row my-3 items">
@@ -387,12 +541,12 @@
                     </p>
                   </div>
                   <div class="col col-4">
-                    <button class="btn btn-sm btn-circle btn-danger kurang"> - </button>
+                    <button class="btn btn-sm btn-circle btn-danger kurang order-amount-btn"> - </button>
                     <span class="mx-1">` + quantity + `</span>
-                    <button class="btn btn-sm btn-circle btn-primary tambah"> + </button>
+                    <button class="btn btn-sm btn-circle btn-primary tambah order-amount-btn"> + </button>
                   </div>
                   <div class="col col-3">
-                    <p style="text-align: right;" class="subtotal-product">` + subtotal + `</p>
+                    <p style="text-align: right;" class="subtotal-product">` + price + `</p>
                   </div>
                 </div>`
               );
@@ -428,8 +582,6 @@
       } else {
         action += 'saveName/';
       }
-
-      console.log(action);
 
       if (!phone && !email) {
         console.log("Invalid phone or email");
