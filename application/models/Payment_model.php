@@ -52,4 +52,10 @@ class Payment_model extends CI_Model
         $this->db->where('payment_id', $id);
         return $this->db->delete($this->_table);
     }
+
+    public function deleteTransaction($id)
+    {
+        $this->db->where('transaction_id', $id);
+        return $this->db->delete($this->_table);
+    }
 }

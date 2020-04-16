@@ -11,9 +11,22 @@ class Payment_method_model extends CI_Model
         return $this->db->get($this->_table)->result();
     }
 
+    public function get()
+    {
+        $this->db->where('status', 1);
+        return $this->db->get($this->_table)->result();
+    }
+
     public function getById($id)
     {
         $this->db->where('method_id', $id);
+        return $this->db->get($this->_table)->result();
+    }
+
+    public function getSmallestId()
+    {
+        $this->db->select_min('method_id');
+        $this->db->where('status', 1);
         return $this->db->get($this->_table)->result();
     }
 

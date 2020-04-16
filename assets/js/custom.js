@@ -4,7 +4,11 @@ $(document).ready(function () {
 		placeholder: $(this).attr('placeholder')
 	});
 	bsCustomFileInput.init();
-	$(".dataTable").DataTable();
+	$(".dataTable").DataTable({
+		"order": [
+			[0, "desc"]
+		]
+	});
 
 	$('#price').number(true);
 	$('#final-price').number(true);

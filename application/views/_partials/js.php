@@ -18,4 +18,4 @@
 <script src="<?php echo base_url(); ?>assets/js/demo/datatables-demo.js"></script>
 
 <!-- Numeral js -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script> -->

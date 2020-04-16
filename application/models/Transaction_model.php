@@ -8,6 +8,7 @@ class Transaction_model extends CI_Model
     public function getAll()
     {
         $this->db->where('transaction_close_bill !=', NULL);
+        $this->db->order_by('transaction_id', 'DESC');
         return $this->db->get($this->_table)->result();
     }
 
@@ -23,10 +24,9 @@ class Transaction_model extends CI_Model
         return $this->db->get($this->_table)->result();
     }
 
-    public function getUnique($column, $term, $id)
+    public function getUnique($id)
     {
-        $this->db->where($column, $term);
-        $this->db->where('transaction_id <>', $id);
+        $this->db->where('transaction_id', $id);
         return $this->db->get($this->_table)->result();
     }
 
@@ -46,5 +46,11 @@ class Transaction_model extends CI_Model
     {
         $this->db->where('transaction_id', $id);
         return $this->db->update($this->_table, $data);
+    }
+
+    public function delete($id)
+    {
+        $this->db->where('transaction_id', $id);
+        return $this->db->delete($this->_table);
     }
 }

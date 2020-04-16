@@ -43,7 +43,7 @@
                     <thead>
                       <th>ID</th>
                       <th>Name</th>
-                      <th>Phone</th>
+                      <th>Phone / Email</th>
                       <th>Total</th>
                       <th>Action</th>
                     </thead>
@@ -51,11 +51,14 @@
                     <tbody>
                       <?php foreach ($unfinished_transactions as $transaction) : ?>
                         <tr>
-                          <td><?php echo $transaction->transaction_id; ?></td>
-                          <td><?php echo $transaction->customer_name; ?></td>
-                          <td><?php echo $transaction->customer_phone; ?></td>
-                          <td><?php echo number_format($transaction->transaction_total); ?></td>
-                          <td><a href="<?= base_url('order/') . $transaction->transaction_id; ?>">Finish</a></td>
+                          <td><?= $transaction->transaction_id; ?></td>
+                          <td><?= $transaction->customer_name; ?></td>
+                          <td><?= $transaction->customer_phone != null ? $transaction->customer_phone : $transaction->customer_email; ?></td>
+                          <td><?= number_format($transaction->transaction_total); ?></td>
+                          <td>
+                            <a href="<?= base_url('order/') . $transaction->transaction_id; ?>">Finish</a>
+                            <a href="<?= base_url('delete/') . $transaction->transaction_id; ?>">Delete</a>
+                          </td>
                         </tr>
                       <?php endforeach; ?>
                     </tbody>
@@ -80,7 +83,7 @@
                   <thead>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Phone</th>
+                    <th>Phone / Email</th>
                     <th>Total</th>
                     <th>Receipt</th>
                   </thead>
@@ -88,10 +91,10 @@
                   <tbody>
                     <?php foreach ($transactions as $transaction) : ?>
                       <tr>
-                        <td><?php echo $transaction->transaction_id; ?></td>
-                        <td><?php echo $transaction->customer_name; ?></td>
-                        <td><?php echo $transaction->customer_phone; ?></td>
-                        <td><?php echo number_format($transaction->transaction_total); ?></td>
+                        <td><?= $transaction->transaction_id; ?></td>
+                        <td><?= $transaction->customer_name; ?></td>
+                        <td><?= $transaction->customer_phone != null ? $transaction->customer_phone : $transaction->customer_email; ?></td>
+                        <td><?= number_format($transaction->transaction_total); ?></td>
                         <td><a href="<?= base_url($transaction->transaction_receipt); ?>" class="btn btn-circle btn-primary"><i class="fas fa-paperclip"></i></a></td>
                       </tr>
                     <?php endforeach; ?>

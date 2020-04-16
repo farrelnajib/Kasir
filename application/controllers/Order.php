@@ -24,6 +24,10 @@ class Order extends CI_Controller
 
     public function index($id)
     {
+        if (count($this->Transaction_model->getById($id)) == 0) {
+            $this->session->set_flashdata('danger', 'Transaction not found');
+            redirect(base_url());
+        }
         $data['category'] = $this->Category_model->getAll();
         $data['transaction_id'] = $id;
         $data['orders'] = $this->Order_model->getOrders($id);
@@ -31,7 +35,10 @@ class Order extends CI_Controller
         $data['transaction'] = $this->Transaction_model->getById($id);
         $data['payments'] = $this->Payment_model->getByTransactionId($id);
         $data['totalPayments'] = $this->Payment_model->getTotalPayment($id)[0];
-        $data['methods'] = $this->Payment_method_model->getAll();
+        if ($data['totalPayments']->total == null) {
+            $data['totalPayments']->total = 0;
+        }
+        $data['methods'] = $this->Payment_method_model->get();
         $data['purchasedArray'] = [];
         $data['totals'] = $this->get_subtotal($id);
 
@@ -51,6 +58,9 @@ class Order extends CI_Controller
     private function get_subtotal($tid)
     {
         $subtotal = $this->Order_model->getSubtotal($tid)[0]->order_subtotal;
+        if ($subtotal == null) {
+            $subtotal = 0;
+        }
         $tax = $subtotal * 0.1;
         $total = $subtotal + $tax;
 
@@ -63,6 +73,13 @@ class Order extends CI_Controller
         ];
 
         return $data;
+    }
+
+    private function addTotal($tid)
+    {
+        $total = $this->get_subtotal($tid)["total"];
+
+        return $this->Transaction_model->update($tid, ['transaction_total' => $total]);
     }
 
     public function add()
@@ -80,7 +97,7 @@ class Order extends CI_Controller
         $unique = $this->Order_model->getUnique($tid, $mid);
 
         if (count($unique) == 0) {
-            if ($this->Order_model->insert($data)) {
+            if ($this->Order_model->insert($data) && $this->addTotal($tid)) {
                 $order_id = $this->Order_model->getOrderID($tid, $mid)[0]->order_id;
 
                 echo json_encode([
@@ -107,7 +124,11 @@ class Order extends CI_Controller
         ];
 
         if ($this->Order_model->update($oid, $data)) {
-            echo json_encode(["status" => true]);
+            if ($this->addTotal($tid)) {
+                echo json_encode(["status" => true]);
+            } else {
+                echo json_encode(["status" => false]);
+            }
         } else {
             echo json_encode(["status" => false]);
         }
@@ -119,10 +140,16 @@ class Order extends CI_Controller
         $tid = $this->input->post('transaction_id');
 
         if ($this->Order_model->delete($oid)) {
-            $data_order = $this->get_subtotal($tid);
-            $data_order["status"] = true;
+            if ($this->addTotal($tid)) {
+                $data_order = $this->get_subtotal($tid);
+                $data_order["status"] = true;
 
-            echo json_encode($data_order);
+                echo json_encode($data_order);
+            } else {
+                echo json_encode([
+                    "status" => false
+                ]);
+            }
         } else {
             echo json_encode([
                 "status" => false

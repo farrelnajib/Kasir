@@ -29,28 +29,27 @@
 
           <?php $this->load->view('_partials/breadcrumbs'); ?>
 
-          <!-- Search bar -->
-          <form class="form-inline">
-            <div class="input-group shadow" style="float: right;">
-              <input type="text" id="search-bar" class="form-control border-0 small" placeholder="Search for..." autofocus="true">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form>
 
           <!-- Page Heading -->
-
           <div class="row">
 
             <!-- List barang -->
             <div class="col col-lg-7 col-md-12 col-12">
+              <h1 class="h3 text-gray-800">Menu</h1>
+              <form class="form-inline">
+                <div class="input-group shadow" style="width: 100%;">
+                  <input type="text" id="search-bar" class="form-control border-0 small" placeholder="Search for..." autofocus="true">
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                      <i class="fas fa-search fa-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
               <?php foreach ($category as $category) :
                 $id = $category->category_id;
                 if (!empty($menu[$id])) : ?>
-                  <h1 class="h3 mt-3 text-gray-800"><?php echo $category->category_name; ?></h1>
+                  <h2 class="h4 mt-3 text-gray-800"><?php echo $category->category_name; ?></h2>
 
                   <div class="row">
                     <?php foreach ($menu[$id] as $foods) :
@@ -95,7 +94,7 @@
 
             <!-- Cart nya -->
             <div class="col col-lg-5 col-md-12 col-12">
-              <h1 class="h3 mt-3 text-gray-800">Order Detail</h1>
+              <h1 class="h3 text-gray-800">Order Detail</h1>
               <div class="card mb-3 order-detail">
                 <div class="card-body">
 
@@ -249,7 +248,7 @@
                       </table>
                     </div>
                   </div>
-                  <input class="btn btn-block btn-primary" type="submit" name="order" id="order" value="Close bill">
+                  <a href="<?= base_url('finishTransaction/') . $transaction_id; ?>" class="btn btn-block btn-primary">Close bill</a>
                 </div>
               </div>
             </div>
@@ -286,14 +285,17 @@
     let tid = <?= $transaction_id; ?>;
 
     let subtotal = <?= $totals['subtotal']; ?>;
+    console.log(subtotal);
     let tax = <?= $totals['tax']; ?>;
     let total = <?= $totals['total']; ?>;
 
+    let paymentsJSON = <?php echo json_encode($payments); ?>;
     let payments = {};
+    paymentsJSON.forEach(element => {
+      payments['' + element.payment_id + ''] = Number(element.payment_amount);
+    });
     let totalPayment = <?= $totalPayments->total; ?>;
     let changes = -(total);
-
-    console.log(changes);
 
     $(document).on('click', '.btn', function() {
       this.blur()
@@ -313,7 +315,7 @@
         success: function(data) {
           let json = JSON.parse(data);
           if (json["status"] == true) {
-            parent.after(`
+            parent.after( /*html*/ `
               <div class="row mb-3">
                 <input type="hidden" value="<?= $transaction_id; ?>" name="transaction_id">
                 <input type="hidden" value="` + json["payment_id"] + `" name="payment_id">
@@ -502,7 +504,6 @@
         let name = $(this).children('form').children("input[name='name']").val();
         let price = Number($(this).children('form').children("input[name='price']").val());
         let quantity = 1;
-        let subtotal = price * quantity;
 
         $(this).addClass("disabled");
         $(this).removeAttr("href");

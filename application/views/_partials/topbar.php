@@ -13,7 +13,7 @@
 
     <?php if ($this->uri->segment(1) == '') : ?>
       <li class="nav-item dropdown no-arrow mx-1 btn-nav">
-        <a class="btn btn-primary" href="#">
+        <a class="btn btn-primary" href="<?= base_url('newTransaction'); ?>">
           <i class="fa fa-plus"></i> New Transaction
         </a>
       </li>

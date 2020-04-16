@@ -59,4 +59,11 @@ class Order_model extends CI_Model
         $this->db->delete($this->_table);
         return true;
     }
+
+    public function deleteTransaction($id)
+    {
+        $this->db->where('transaction_id', $id);
+        $this->db->delete($this->_table);
+        return true;
+    }
 }

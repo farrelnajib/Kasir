@@ -55,6 +55,9 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['admin'] = 'admin/dashboard';
 $route['admin/logout'] = 'admin/login/logout';
+$route['newTransaction'] = 'transaction/newTransaction';
+$route['finishTransaction/(:any)'] = 'transaction/finishTransaction/$1';
+$route['delete/(:any)'] = 'transaction/delete/$1';
 $route['order'] = 'transaction';
 $route['order/add'] = 'order/add';
 $route['order/addPayment'] = 'order/addPayment';
