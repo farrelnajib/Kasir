@@ -37,7 +37,7 @@
             <div class="col col-lg-7 col-md-12 col-12">
               <h1 class="h3 text-gray-800">Menu</h1>
               <form class="form-inline">
-                <div class="input-group shadow" style="width: 100%;">
+                <div class="input-group" style="width: 100%;">
                   <input type="text" id="search-bar" class="form-control border-0 small" placeholder="Search for..." autofocus="true">
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button">
@@ -248,7 +248,13 @@
                       </table>
                     </div>
                   </div>
-                  <a href="<?= base_url('finishTransaction/') . $transaction_id; ?>" class="btn btn-block btn-primary">Close bill</a>
+
+                  <?php
+                  $unset = false;
+                  if ($totals["total"] == 0 || empty($transaction[0]->customer_name) || (empty($transaction[0]->customer_phone) && empty($transaction[0]->customer_email)) || $totalPayments->total == 0) {
+                    $unset = true;
+                  } ?>
+                  <a href="<?= base_url('finishTransaction/') . $transaction_id; ?>" class="btn btn-block btn-primary <?= $unset ? 'disabled' : ''; ?>" id="closeBill">Close bill</a>
                 </div>
               </div>
             </div>
@@ -285,7 +291,6 @@
     let tid = <?= $transaction_id; ?>;
 
     let subtotal = <?= $totals['subtotal']; ?>;
-    console.log(subtotal);
     let tax = <?= $totals['tax']; ?>;
     let total = <?= $totals['total']; ?>;
 
@@ -296,6 +301,26 @@
     });
     let totalPayment = <?= $totalPayments->total; ?>;
     let changes = -(total);
+
+    let isOrdering = <?= $totals["total"] > 0 ? 'true' : 'false'; ?>;
+    let isNameFilled = <?= !empty($transaction[0]->customer_name) ? 'true' : 'false'; ?>;
+    let isNumberFilled = <?= (!empty($transaction[0]->customer_phone || !empty($transaction[0]->customer_email))) ? 'true' : 'false'; ?>;
+    let isPaymentFilled = <?= $totalPayments->total > 0 ? 'true' : 'false'; ?>;
+
+    function checkButton() {
+      console.log(isOrdering);
+      console.log(isNameFilled);
+      console.log(isNumberFilled);
+      console.log(isPaymentFilled);
+      console.log("\n");
+      if (isOrdering && isNameFilled && isNumberFilled && isPaymentFilled) {
+        if ($("#closeBill").hasClass("disabled")) {
+          $("#closeBill").removeClass('disabled');
+        }
+      } else {
+        $('#closeBill').addClass('disabled');
+      }
+    }
 
     $(document).on('click', '.btn', function() {
       this.blur()
@@ -365,6 +390,10 @@
           if (json["status"]) {
             totalPayment -= payments[paymentID];
             changes = totalPayment - total;
+            if (totalPayment < total) {
+              isPaymentFilled = false;
+              checkButton();
+            }
 
             $('#total-payment').html(totalPayment);
             $('#changes').html(changes);
@@ -412,7 +441,14 @@
         success: function(data) {
           let json = JSON.parse(data);
 
-          if (!json["status"]) {
+          if (json["status"]) {
+            if (totalPayment >= total) {
+              isPaymentFilled = true;
+            } else {
+              isPaymentFilled = false;
+            }
+            checkButton();
+          } else {
             alert('Failed to save payment')
           }
         }
@@ -478,6 +514,10 @@
             let link = $('.product-link').children("form").children("input[name='menu_id'][value='" + menu_id + "']");
             link.parents('a').removeClass("disabled");
             link.parents('a').prop("href", "javascript:void(0);");
+            if (total == 0) {
+              isOrdering = false;
+              checkButton();
+            }
 
             let productDiv = link.parent().siblings('.card-product-grid');
             productDiv.removeClass("disabled");
@@ -521,13 +561,16 @@
               tax = subtotal * 0.1;
               total = subtotal + tax;
               changes = totalPayment - total;
+              isOrdering = true;
 
+              checkButton();
               $('#subtotal').html(subtotal);
               $('#tax').html(tax);
               $('#total').html(total);
               $('#changes').html(changes);
 
               $('.orders').append(
+                /*html*/
                 `<div class="row my-3 items">
                   <form method="POST">
                     <input type="hidden" value="` + transaction_id + `" name="transaction_id">
@@ -603,6 +646,23 @@
             var json = JSON.parse(data);
             console.log(json);
             if (json["status"]) {
+              if (whichColumn == "Phone") {
+                isNumberFilled = true;
+                if (insertedData == '') {
+                  isNumberFilled = false;
+                } else {
+                  isNumberFilled = true;
+                }
+              } else {
+                if (insertedData == '') {
+                  isNameFilled = false;
+                } else {
+                  isNameFilled = true;
+                }
+              }
+
+              checkButton();
+
               whichForm.parent().after(`
               <p>` + phoneOrEmail + `: <strong>` + insertedData + `</strong> <a href="javascript:void(0);" id="` + whichColumn + `Button"><i class="fa fa-edit"></i></a></p>
             `);
