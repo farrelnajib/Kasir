@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 17, 2020 at 10:37 AM
+-- Generation Time: May 04, 2020 at 08:11 AM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -70,7 +70,7 @@ CREATE TABLE `menu` (
 INSERT INTO `menu` (`menu_id`, `menu_name`, `menu_price`, `menu_discount`, `menu_final_price`, `category_id`, `menu_picture`, `status`) VALUES
 (26, 'Krabby Patty', 25000, 0, 25000, 2, 'Krabby_Patty1.jpg', 1),
 (27, 'Kelp Shake', 10000, 0, 10000, 4, 'Kelp_Shake.png', 1),
-(29, 'Coba Kita Kasih Nama Panjang Banget', 20000, 25, 15000, 1, 'Chum1.jpg', 1),
+(29, 'Chum Stick', 20000, 25, 15000, 1, 'Chum1.jpg', 1),
 (30, 'Krusty Dogs', 10000, 0, 10000, 1, 'Krusty_Dogs.png', 0),
 (31, 'Kiddy Meals', 45000, 50, 22500, 2, 'faf9e89cf335697486505a6b6afe2fb7.png', 1),
 (35, 'Krabby Pizza', 60000, 15, 51000, 2, '082b6d38648ea7d32adb01acf1e8e19a.png', 1),
@@ -87,7 +87,7 @@ CREATE TABLE `orders` (
   `transaction_id` bigint(20) NOT NULL,
   `menu_id` int(11) NOT NULL,
   `order_quantity` int(11) NOT NULL,
-  `order_notes` varchar(255) NOT NULL,
+  `order_notes` varchar(255) DEFAULT NULL,
   `order_subtotal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -114,7 +114,9 @@ INSERT INTO `orders` (`order_id`, `transaction_id`, `menu_id`, `order_quantity`,
 (118, 200416203515, 36, 1, '', 10000),
 (119, 200416204738, 29, 1, '', 15000),
 (120, 200416204738, 27, 1, '', 10000),
-(121, 200416204738, 35, 2, '', 102000);
+(121, 200416204738, 35, 2, '', 102000),
+(127, 200504124438, 27, 1, NULL, 10000),
+(128, 200504124438, 26, 1, NULL, 25000);
 
 -- --------------------------------------------------------
 
@@ -142,7 +144,9 @@ INSERT INTO `payment` (`payment_id`, `transaction_id`, `method_id`, `payment_amo
 (15, 200416203515, 1, 40000),
 (16, 200416203515, 2, 4000),
 (17, 200416204738, 1, 100000),
-(18, 200416204738, 2, 40000);
+(18, 200416204738, 2, 40000),
+(26, 200504124438, 1, 30000),
+(27, 200504124438, 2, 8500);
 
 -- --------------------------------------------------------
 
@@ -200,7 +204,7 @@ CREATE TABLE `transaction` (
   `transaction_change` int(11) NOT NULL,
   `transaction_open_bill` datetime DEFAULT current_timestamp(),
   `transaction_close_bill` datetime DEFAULT NULL,
-  `transaction_receipt` varchar(255) NOT NULL
+  `transaction_receipt` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -213,7 +217,8 @@ INSERT INTO `transaction` (`transaction_id`, `transaction_total`, `customer_name
 (200415131021, 138600, 'Farrel', '', 'farrelnajib@gmail.com', 138600, 0, '2020-04-15 13:10:21', '2020-04-16 20:34:48', ''),
 (200415131957, 55000, 'Farrel', '', 'farrelnajib@gmail.com', 55000, 0, '2020-04-15 13:19:57', '2020-04-16 20:34:37', ''),
 (200416203515, 44000, 'Customer 3', '', 'customer3@binus.ac.id', 44000, 0, '2020-04-16 20:35:15', '2020-04-16 20:36:26', ''),
-(200416204738, 139700, 'Customer 5', '08112233', '', 140000, 300, '2020-04-16 20:47:38', '2020-04-16 20:49:39', '');
+(200416204738, 139700, 'Customer 5', '08112233', '', 140000, 300, '2020-04-16 20:47:38', '2020-04-16 20:49:39', ''),
+(200504124438, 38500, NULL, NULL, NULL, 38500, 0, '2020-05-04 12:44:38', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -309,13 +314,13 @@ ALTER TABLE `menu`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `payment_method`
@@ -333,7 +338,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200416213927;
+  MODIFY `transaction_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200504124439;
 
 --
 -- AUTO_INCREMENT for table `user`
