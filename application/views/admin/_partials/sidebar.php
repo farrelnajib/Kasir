@@ -26,18 +26,19 @@
     Main Menu
   </div>
 
-  <!-- Nav Item - Food Categories -->
+  <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item <?php echo ($this->uri->segment(2) == 'categories') ? 'active' : ''; ?>">
-    <a class="nav-link" href="<?php echo base_url(); ?>admin/categories">
-      <i class="fas fa-fw fa-columns"></i>
-      <span>Categories</span></a>
-  </li>
-
-  <!-- Nav Item - Payment Methods -->
-  <li class="nav-item <?php echo ($this->uri->segment(2) == 'methods') ? 'active' : ''; ?>">
-    <a class="nav-link" href="<?php echo base_url(); ?>admin/methods">
-      <i class="fas fa-fw fa-money-bill-wave-alt"></i>
-      <span>Methods</span></a>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#masterCollapse" aria-expanded="true" aria-controls="masterCollapse">
+      <i class="<?php echo ($this->uri->segment(2) == 'categories') ? 'fas' : 'far'; ?> fa-fw fa-circle"></i>
+      <span>Master</span>
+    </a>
+    <div id="masterCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 class="collapse-header">Master:</h6>
+        <a class="collapse-item" href="<?php echo base_url(); ?>admin/categories">Categories</a>
+        <a class="collapse-item" href="<?php echo base_url(); ?>admin/methods">Payment methods</a>
+      </div>
+    </div>
   </li>
 
   <!-- Nav Item - Food Menu -->

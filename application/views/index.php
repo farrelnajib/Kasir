@@ -39,7 +39,7 @@
 
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-striped menuDataTable" width="100%" cellspacing="0">
+                  <table class="table table-striped dataTable" width="100%" cellspacing="0">
                     <thead>
                       <th>ID</th>
                       <th>Name</th>
@@ -79,7 +79,7 @@
 
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-striped menuDataTable" width="100%" cellspacing="0">
+                <table class="table table-striped dataTable" width="100%" cellspacing="0">
                   <thead>
                     <th>ID</th>
                     <th>Name</th>

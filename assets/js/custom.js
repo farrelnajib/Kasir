@@ -4,8 +4,7 @@ $(document).ready(function () {
 		placeholder: $(this).attr('placeholder')
 	});
 	bsCustomFileInput.init();
-	$(".dataTable").DataTable();
-	$(".menuDataTable").DataTable({
+	$(".dataTable").DataTable({
 		"order": [
 			[0, "desc"]
 		]
