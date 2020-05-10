@@ -19,6 +19,7 @@ class Payment_model extends CI_Model
     public function getByTransactionId($id)
     {
         $this->db->where('transaction_id', $id);
+        $this->db->join('payment_method', 'payment.method_id = payment_method.method_id');
         return $this->db->get($this->_table)->result();
     }
 

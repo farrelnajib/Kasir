@@ -20,7 +20,7 @@ class Transaction extends CI_Controller
             redirect(base_url('login'));
         }
 
-        if ($this->uri->segment(1) == 'order' || $this->uri->segment(1) == 'transaction') {
+        if ($this->uri->segment(1) == 'order' || ($this->uri->segment(1) == 'transaction' && $this->uri->segment(2) == '')) {
             redirect(base_url());
         }
     }
@@ -97,5 +97,18 @@ class Transaction extends CI_Controller
             $this->session->set_flashdata('danger', 'Failed delete payments');
             redirect(base_url());
         }
+    }
+
+    public function invoice($id)
+    {
+        $this->load->library('pdf');
+        $data['transaction'] = $this->Transaction_model->getById($id)[0];
+        $data['orders'] = $this->Order_model->getOrders($id);
+        $data['payments'] = $this->Payment_model->getByTransactionId($id);
+        // var_dump($data['payments']);
+
+        $this->load->view('Invoice', $data);
+
+        // $this->pdf->load_view('Invoice', $data);
     }
 }
