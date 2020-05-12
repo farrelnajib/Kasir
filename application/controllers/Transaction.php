@@ -70,13 +70,7 @@ class Transaction extends CI_Controller
         $closeBill = date("Y-m-d H:i:s");
 
         if ($this->Transaction_model->update($id, ['transaction_close_bill' => $closeBill])) {
-            if ($this->invoice($id)) {
-                $this->session->set_flashdata('success', 'Success close bill');
-                redirect(base_url());
-            } else {
-                $this->session->set_flashdata('danger', 'Failed send bill');
-                redirect(base_url());
-            }
+            $this->invoice($id);
         } else {
             $this->session->set_flashdata('danger', 'Failed close bill');
             redirect(base_url());
@@ -120,7 +114,7 @@ class Transaction extends CI_Controller
 
         $config = [
             'protocol' => 'smtp',
-            'smtp_host' => 'ssl://smtp.googlemail.com',
+            'smtp_host' => 'ssl://smtp.gmail.com',
             'smtp_user' => 'waroenkabnormal@gmail.com',
             'smtp_pass' => 'anshary08',
             'smtp_port' => '465',
@@ -133,13 +127,15 @@ class Transaction extends CI_Controller
 
         $this->email->from('waroenkabnormal@gmail.com', 'Waroenk Abnormal');
         $this->email->to($data['transaction']->customer_email);
-        $this->email->subject('Your E-receipt');
+        $this->email->subject('Your E-receipt for transaction ' . $id);
         $this->email->message($this->load->view('Invoice', $data, true));
 
         if ($this->email->send()) {
-            return true;
+            $this->session->set_flashdata('success', 'Success close bill');
+            redirect(base_url());
         } else {
-            return false;
+            $this->session->set_flashdata('danger', 'Failed to send bill');
+            redirect(base_url());
         }
     }
 }

@@ -308,11 +308,6 @@
     let isPaymentFilled = <?= $totalPayments->total > 0 ? 'true' : 'false'; ?>;
 
     function checkButton() {
-      console.log(isOrdering);
-      console.log(isNameFilled);
-      console.log(isNumberFilled);
-      console.log(isPaymentFilled);
-      console.log("\n");
       if (isOrdering && isNameFilled && isNumberFilled && isPaymentFilled) {
         if ($("#closeBill").hasClass("disabled")) {
           $("#closeBill").removeClass('disabled');
@@ -628,7 +623,6 @@
       }
 
       if (!phone && !email) {
-        console.log("Invalid phone or email");
         if (!whichForm.hasClass("is-invalid")) {
           whichForm.addClass('is-invalid');
           whichForm.after(`
@@ -644,7 +638,6 @@
           data: serializedData,
           success: function(data) {
             var json = JSON.parse(data);
-            console.log(json);
             if (json["status"]) {
               if (whichColumn == "Phone") {
                 isNumberFilled = true;
