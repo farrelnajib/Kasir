@@ -40,6 +40,16 @@ class Order_model extends CI_Model
         return $this->db->get($this->_table)->result();
     }
 
+    public function getTopSellings()
+    {
+        $this->db->select_sum('order_quantity', 'total');
+        $this->db->select('menu.menu_name');
+        $this->db->join('menu', 'menu.menu_id = orders.menu_id');
+        $this->db->group_by('orders.menu_id');
+        $this->db->order_by('total', 'DESC');
+        return $this->db->get($this->_table)->result();
+    }
+
     public function insert($data)
     {
         $this->db->insert($this->_table, $data);

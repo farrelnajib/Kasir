@@ -33,11 +33,10 @@ class Menu_model extends CI_Model
         return $this->db->get($this->_table)->result();
     }
 
-    // public function getCategoryFromMenu($id)
-    // {
-    //     $this->db->where('category_id', $id);
-    //     return $this->db->get('menu')->result();
-    // }
+    public function getTotalMenu()
+    {
+        return $this->db->count_all($this->_table);
+    }
 
     public function insert($data)
     {

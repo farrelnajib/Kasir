@@ -69,13 +69,20 @@ if (isset($method) && count($method) > 0) {
                     </div>
                   </div>
 
-                  <!-- Status form -->
+                  <!-- status form -->
                   <div class="form-group">
-                    <label for="status">Status <span class="mandatory">*</span></label>
-                    <select name="status" id="status" class="form-control">
-                      <option value="1" <?php echo $status == 1 ? 'selected' : ''; ?>>Available</option>
-                      <option value="0" <?php echo $status == 0 ? 'selected' : ''; ?>>Maintenance</option>
-                    </select>
+                    <label for="status">status <span class="mandatory">*</span></label>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="admin" value="1" name="status" <?php echo $status == 1 ? 'checked' : ''; ?>>
+                      <label class="custom-control-label" for="admin">Available</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="kasir" value="0" name="status" <?php echo $status == 0 ? 'checked' : ''; ?>>
+                      <label class="custom-control-label" for="kasir">Maintenance</label>
+                    </div>
+                    <div class="invalid-feedback">
+                      <?php echo form_error('status'); ?>
+                    </div>
                   </div>
 
                   <!-- Cancel button -->
