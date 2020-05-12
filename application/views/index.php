@@ -95,7 +95,7 @@
                         <td><?= $transaction->customer_name; ?></td>
                         <td><?= $transaction->customer_phone != null ? $transaction->customer_phone : $transaction->customer_email; ?></td>
                         <td><?= number_format($transaction->transaction_total); ?></td>
-                        <td><a href="<?= base_url($transaction->transaction_receipt); ?>" class="btn btn-circle btn-primary"><i class="fas fa-paperclip"></i></a></td>
+                        <td><a href="<?= base_url('transaction/invoice/') . $transaction->transaction_id; ?>" class="btn btn-circle btn-primary"><i class="fas fa-paperclip"></i></a></td>
                       </tr>
                     <?php endforeach; ?>
                   </tbody>
