@@ -28,6 +28,7 @@ class Dashboard extends CI_Controller
         $data['thisMonthEarnings'] = $this->Transaction_model->sumMonthly()[0]->transaction_total;
         $data['totalMenu'] = $this->Menu_model->getTotalMenu();
         $data['totalTransactions'] = $this->Transaction_model->count();
+        $data['transactions'] = $this->Transaction_model->getAll();
         $this->load->view('admin/dashboard', $data);
     }
 
@@ -35,5 +36,27 @@ class Dashboard extends CI_Controller
     {
         $temp = $this->Order_model->getTopSellings();
         echo json_encode($temp);
+    }
+
+    public function salesPerMonth()
+    {
+        $result = array();
+        for ($i = 12; $i >= 0; $i--) {
+            $thisMonth = $this->Transaction_model->getMonthTransaction($i)[0];
+            if ($thisMonth->total == null) {
+                $thisMonth->total = 0;
+            }
+
+            $thisMonth->month = date('m') - $i;
+            if ($thisMonth->month <= 0) {
+                $thisMonth->month += 12;
+            }
+
+            $thisMonth->month = DateTime::createFromFormat('!m', $thisMonth->month)->format('M');
+
+            $result[] = $thisMonth;
+        }
+
+        echo json_encode($result);
     }
 }

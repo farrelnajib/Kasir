@@ -46,6 +46,21 @@ class Transaction_model extends CI_Model
         return $this->db->count_all_results($this->_table);
     }
 
+    public function getMonthTransaction($monthInterval)
+    {
+        // $this->db->select_sum('transaction_total', 'total');
+        // $this->db->where('YEAR(transaction_close_bill)', "YEAR(CURRENT_DATE - INTERVAL 0 MONTH)");
+        // $this->db->where('MONTH(transaction_close_bill)', "MONTH(CURRENT_DATE - INTERVAL 0 MONTH)");
+        // return $this->db->get($this->_table)->result();
+
+        $query = $this->db->query('
+            SELECT SUM(`transaction_total`) AS total FROM `transaction`
+            WHERE YEAR(`transaction_close_bill`) = YEAR(CURRENT_DATE - INTERVAL ' . $monthInterval . ' MONTH)
+            AND MONTH(`transaction_close_bill`) = MONTH(CURRENT_DATE - INTERVAL ' . $monthInterval . ' MONTH)
+        ');
+        return $query->result();
+    }
+
     public function getUnique($id)
     {
         $this->db->where('transaction_id', $id);

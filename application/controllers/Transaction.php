@@ -36,7 +36,7 @@ class Transaction extends CI_Controller
 
     public function newTransaction()
     {
-        $id = date("ymdHis");
+        $id = date("YmdHis");
         $date = date("Y-m-d H:i:s");
 
         $existingID = $this->Transaction_model->getUnique($id);

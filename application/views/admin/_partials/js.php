@@ -16,9 +16,9 @@
 <!-- Page level custom scripts -->
 
 <!-- Numeral js -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/vendor/jquery/numeral.min.js"></script>
 
 <!-- Select2 js -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+<script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/select2.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bs-custom-file-input.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>

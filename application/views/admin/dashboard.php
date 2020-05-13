@@ -104,10 +104,64 @@
             <div class="col col-xl-6 col-md-12 mb-4">
               <div class="card shadow">
                 <div class="card-header">
-                  Top Selling Products
+                  <h4 class="text-primary card-title m-0">
+                    <strong>Top Sellings</strong>
+                  </h4>
                 </div>
                 <div class="card-body">
-                  <canvas id="myChart"></canvas>
+                  <canvas id="topSales"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col col-xl-6 col-md-12 mb-4">
+              <div class="card shadow">
+                <div class="card-header">
+                  <h4 class="text-primary card-title m-0">
+                    <strong>Monthly Earnings</strong>
+                  </h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="monthlyEarnings"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col col-12">
+              <div class="card shadow mb-4">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-12">
+                      <h4 class="text-primary card-title m-0"><strong>Transactions</strong></h4>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped menuDataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone / Email</th>
+                        <th>Total</th>
+                        <th>Receipt</th>
+                      </thead>
+
+                      <tbody>
+                        <?php foreach ($transactions as $transaction) : ?>
+                          <tr>
+                            <td><?= $transaction->transaction_id; ?></td>
+                            <td><?= $transaction->customer_name; ?></td>
+                            <td><?= $transaction->customer_phone != null ? $transaction->customer_phone : $transaction->customer_email; ?></td>
+                            <td><?= number_format($transaction->transaction_total); ?></td>
+                            <td><a href="<?= base_url('transaction/invoice/') . $transaction->transaction_id; ?>" class="btn btn-circle btn-primary"><i class="fas fa-paperclip"></i></a></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -137,42 +191,12 @@
   <!-- Logout Modal-->
   <?php $this->load->view('admin/_partials/modal'); ?>
 
+  <script>
+    var APP_URL = "<?= base_url(); ?>"
+  </script>
   <?php $this->load->view('admin/_partials/js'); ?>
   <script src="<?php echo base_url(); ?>assets/vendor/chart.js/Chart.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $.ajax({
-        type: 'GET',
-        url: "<?= base_url('admin/dashboard/topSellings'); ?>",
-        dataType: 'json',
-        success: function(response) {
-          let labelArray = [];
-          let dataArray = [];
-
-          response.forEach(resp => {
-            labelArray.push(resp.menu_name);
-            dataArray.push(parseInt(resp.total));
-          });
-
-          var ctx = document.getElementById('myChart');
-          var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: labelArray,
-              datasets: [{
-                label: '# of sales',
-                data: dataArray,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-              }]
-            },
-            options: {}
-          });
-        }
-      });
-    });
-  </script>
+  <script src="<?php echo base_url(); ?>assets/js/dashboard.js"></script>
 
 </body>
 
