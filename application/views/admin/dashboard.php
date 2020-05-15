@@ -29,6 +29,8 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
+          <?php $this->load->view('admin/_partials/alerts'); ?>
+          <div id="alert"></div>
 
           <?php $this->load->view('admin/_partials/breadcrumbs'); ?>
 

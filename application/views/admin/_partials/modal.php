@@ -31,7 +31,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="resend">Resend bill</button>
+        <button type="button" class="btn btn-primary" id="resend">Resend invoice</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>

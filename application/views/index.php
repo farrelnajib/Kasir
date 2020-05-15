@@ -27,6 +27,7 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
           <?php $this->load->view('_partials/alerts'); ?>
+          <div id="alert"></div>
 
           <?php if (!empty($unfinished_transactions)) : ?>
             <div class="card shadow mb-4">

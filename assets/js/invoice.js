@@ -159,13 +159,44 @@ function showInvoice(transaction_id) {
 }
 
 
-// $('.modal').on('click', '#resend', () => {
-// 	let button = document.getElementById('resend');
-// 	button.classList.add('disabled');
-// 	button.setAttribute('disabled', true);
-// 	button.innerHTML = `<i class="fa fa-circle-notch fa-spin"></i>`;
-// 	// $.ajax({
-// 	// 	type: 'GET',
-// 	// 	url: APP_URL + 'transaction/invoice/' + transactionID,
-// 	// });
-// });
+$('.modal').on('click', '#resend', () => {
+	let button = document.getElementById('resend');
+	button.classList.add('disabled');
+	button.setAttribute('disabled', true);
+	button.innerHTML = `<i class="fa fa-circle-notch fa-spin"></i>`;
+	$.ajax({
+		type: 'GET',
+		url: APP_URL + 'transaction/invoice/' + transactionID,
+		dataType: 'JSON',
+		data: {
+			'method': 'resend'
+		},
+		success: (response) => {
+			console.log(response);
+			let keteranganAlert,
+				warnaAlert;
+
+			if (response.status) {
+				keteranganAlert = "Success resend invoice";
+				warnaAlert = "success";
+			} else {
+				keteranganAlert = "Failed to resend invoice";
+				warnaAlert = "danger";
+			}
+
+			$('#invoiceModal').modal('hide');
+			button.removeAttribute('disabled');
+			button.classList.remove('disabled');
+			button.innerHTML = 'Resend invoice';
+
+			document.getElementById('alert').innerHTML = `
+                <div class="alert alert-` + warnaAlert + ` alert-dismissible fade show" role="alert">
+                    ` + keteranganAlert + `
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+		}
+	});
+});

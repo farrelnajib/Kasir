@@ -70,7 +70,7 @@ class Transaction extends CI_Controller
         $closeBill = date("Y-m-d H:i:s");
 
         if ($this->Transaction_model->update($id, ['transaction_close_bill' => $closeBill])) {
-            if (json_decode($this->invoice($id), true)['status']) {
+            if ($this->invoice($id)) {
                 $this->session->set_flashdata('success', 'Success close bill');
                 redirect(base_url());
             } else {
@@ -115,8 +115,6 @@ class Transaction extends CI_Controller
         $data['transaction']->transaction_open_bill = date("l, d F Y H:i:s", strtotime($data['transaction']->transaction_open_bill));
         $data['transaction']->transaction_close_bill = date("l, d F Y H:i:s", strtotime($data['transaction']->transaction_close_bill));
 
-
-
         $config = [
             'protocol' => 'smtp',
             'smtp_host' => 'ssl://smtp.gmail.com',
@@ -138,9 +136,17 @@ class Transaction extends CI_Controller
         $this->email->send();
 
         if ($this->email->send()) {
-            return json_encode(['status' => true]);
+            if ($this->input->get('method') == 'resend') {
+                echo json_encode(['status' => true]);
+            } else {
+                return true;
+            }
         } else {
-            return json_encode(['status' => true]);
+            if ($this->input->get('method') == 'resend') {
+                echo json_encode(['status' => false]);
+            } else {
+                return false;
+            }
         }
     }
 }

@@ -72,6 +72,5 @@ class Dashboard extends CI_Controller
         $data['transaction']->transaction_open_bill = date("l, d F Y H:i:s", strtotime($data['transaction']->transaction_open_bill));
         $data['transaction']->transaction_close_bill = date("l, d F Y H:i:s", strtotime($data['transaction']->transaction_close_bill));
         echo json_encode($data);
-        die;
     }
 }
