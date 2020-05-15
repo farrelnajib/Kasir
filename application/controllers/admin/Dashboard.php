@@ -18,6 +18,7 @@ class Dashboard extends CI_Controller
         }
 
         $this->load->model('Transaction_model');
+        $this->load->model('Payment_model');
         $this->load->model('Menu_model');
         $this->load->model('Order_model');
     }
@@ -58,5 +59,19 @@ class Dashboard extends CI_Controller
         }
 
         echo json_encode($result);
+    }
+
+    public function invoice($id)
+    {
+        $data['transaction'] = $this->Transaction_model->getById($id)[0];
+        $data['orders'] = $this->Order_model->getOrders($id);
+        $data['payments'] = $this->Payment_model->getByTransactionId($id);
+
+        $data['transaction']->transaction_subtotal = $this->Order_model->getSubtotal($id)[0]->order_subtotal;
+        $data['transaction']->transaction_tax = $data['transaction']->transaction_subtotal * 0.1;
+        $data['transaction']->transaction_open_bill = date("l, d F Y H:i:s", strtotime($data['transaction']->transaction_open_bill));
+        $data['transaction']->transaction_close_bill = date("l, d F Y H:i:s", strtotime($data['transaction']->transaction_close_bill));
+        echo json_encode($data);
+        die;
     }
 }

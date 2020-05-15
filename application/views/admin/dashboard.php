@@ -4,6 +4,7 @@
 <head>
 
   <?php $this->load->view('admin/_partials/head'); ?>
+  <link rel="stylesheet" href="<?= base_url('assets/css/invoice.css'); ?>">
 
 </head>
 
@@ -156,7 +157,7 @@
                             <td><?= $transaction->customer_name; ?></td>
                             <td><?= $transaction->customer_phone != null ? $transaction->customer_phone : $transaction->customer_email; ?></td>
                             <td><?= number_format($transaction->transaction_total); ?></td>
-                            <td><a href="<?= base_url('transaction/invoice/') . $transaction->transaction_id; ?>" class="btn btn-circle btn-primary"><i class="fas fa-paperclip"></i></a></td>
+                            <td align="center"><button class="btn btn-circle btn-primary" onclick="showInvoice(<?= $transaction->transaction_id; ?>)"><i class="fas fa-paperclip"></i></button></td>
                           </tr>
                         <?php endforeach; ?>
                       </tbody>
@@ -191,12 +192,10 @@
   <!-- Logout Modal-->
   <?php $this->load->view('admin/_partials/modal'); ?>
 
-  <script>
-    var APP_URL = "<?= base_url(); ?>"
-  </script>
   <?php $this->load->view('admin/_partials/js'); ?>
   <script src="<?php echo base_url(); ?>assets/vendor/chart.js/Chart.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/dashboard.js"></script>
+  <script src="<?php echo base_url(); ?>assets/js/invoice.js"></script>
 
 </body>
 

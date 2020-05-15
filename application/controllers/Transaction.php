@@ -70,7 +70,13 @@ class Transaction extends CI_Controller
         $closeBill = date("Y-m-d H:i:s");
 
         if ($this->Transaction_model->update($id, ['transaction_close_bill' => $closeBill])) {
-            $this->invoice($id);
+            if (json_decode($this->invoice($id), true)['status']) {
+                $this->session->set_flashdata('success', 'Success close bill');
+                redirect(base_url());
+            } else {
+                $this->session->set_flashdata('danger', 'Failed to send bill');
+                redirect(base_url());
+            }
         } else {
             $this->session->set_flashdata('danger', 'Failed close bill');
             redirect(base_url());
@@ -100,7 +106,6 @@ class Transaction extends CI_Controller
 
     public function invoice($id)
     {
-        $this->load->library('pdf');
         $data['transaction'] = $this->Transaction_model->getById($id)[0];
         $data['orders'] = $this->Order_model->getOrders($id);
         $data['payments'] = $this->Payment_model->getByTransactionId($id);
@@ -130,12 +135,12 @@ class Transaction extends CI_Controller
         $this->email->subject('Your E-receipt for transaction ' . $id);
         $this->email->message($this->load->view('Invoice', $data, true));
 
+        $this->email->send();
+
         if ($this->email->send()) {
-            $this->session->set_flashdata('success', 'Success close bill');
-            redirect(base_url());
+            return json_encode(['status' => true]);
         } else {
-            $this->session->set_flashdata('danger', 'Failed to send bill');
-            redirect(base_url());
+            return json_encode(['status' => true]);
         }
     }
 }
