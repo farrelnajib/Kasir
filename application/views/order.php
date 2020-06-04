@@ -511,7 +511,6 @@
             link.parents('a').prop("href", "javascript:void(0);");
             if (total == 0) {
               isOrdering = false;
-              checkButton();
             }
 
             let productDiv = link.parent().siblings('.card-product-grid');
@@ -523,6 +522,13 @@
             let subtotalDiv = sibling.find('.subtotal-product');
             subtotalDiv.html(price);
           }
+
+          if (totalPayment < total) {
+            isPaymentFilled = false;
+          } else {
+            isPaymentFilled = true;
+          }
+          checkButton();
 
           $('#subtotal').html(subtotal);
           $('#tax').html(tax);
@@ -558,7 +564,11 @@
               changes = totalPayment - total;
               isOrdering = true;
 
-              checkButton();
+              if (totalPayment < total) {
+                isPaymentFilled = false;
+                checkButton();
+              }
+
               $('#subtotal').html(subtotal);
               $('#tax').html(tax);
               $('#total').html(total);
