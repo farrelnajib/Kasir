@@ -2,8 +2,8 @@
 
 A cashier web application that can send receipt as pdf through Whatsapp or email so we can save papers. This project is a college project to accomplish Human and Computer Interaction subject.
 
-Demo: https://abnormal.farrelanshary.my.id/ <br/>
-Admin page: https://abnormal.farrelanshary.my.id/admin <br/>
+Demo: https://abnormal.farrelanshary.me/ <br/>
+Admin page: https://abnormal.farrelanshary.me/admin <br/>
 login: guest@example.com <br/>
 password: admin123 <br/>
 
